@@ -14,6 +14,7 @@ public class FactoryReceiver extends BroadcastReceiver{
 	private static final String TAG = Tools.TAG;
 	//检测U盘 udiskfile 启动产测apk
 	private static final String udiskfile = "custom_cases.xml";
+	private static final String rebootfile = "khadas_reboot.xml";
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		// TODO Auto-generated method stub
@@ -35,6 +36,17 @@ public class FactoryReceiver extends BroadcastReceiver{
             }
 
 			if (Intent.ACTION_MEDIA_MOUNTED.equals(action)) {
+				String rebootfullpath = path+"/"+rebootfile;
+				File rebootfile = new File(rebootfullpath);
+				if(rebootfile.exists() && rebootfile.isFile()){
+					try {
+					Process proc = Runtime.getRuntime().exec(new String[]{"reboot"});
+					proc.waitFor();
+					} catch (Exception e){
+						e.printStackTrace();
+					}
+					return;
+				}
 				String fullpath = path+"/"+udiskfile;
 				File file = new File(fullpath);
 				 if(file.exists() && file.isFile()){
