@@ -13,7 +13,7 @@ import android.util.Log;
 public class FactoryReceiver extends BroadcastReceiver{
 	private static final String TAG = Tools.TAG;
 	//检测U盘 udiskfile 启动产测apk
-	private static final String udiskfile = "custom_cases.xml";
+	private static final String udiskfile = "khadas_test.xml";
 	private static final String rebootfile = "khadas_reboot.xml";
 	@Override
 	public void onReceive(Context context, Intent intent) {
