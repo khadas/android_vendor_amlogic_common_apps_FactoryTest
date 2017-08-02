@@ -155,7 +155,7 @@ public class MainActivity extends Activity {
 	private boolean BT_ERR =true;
 	private int BT_try_count = 2;
 	private int btLevel = 0;
-	private final String BTSSID="Vim";
+	private final String BTSSID="Khadas";
 
     
     
