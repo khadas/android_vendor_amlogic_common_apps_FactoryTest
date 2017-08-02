@@ -382,6 +382,7 @@
       
         <TextView
             android:id="@+id/device_id"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/showdeivceid"
@@ -390,6 +391,7 @@
 
         <TextView
             android:id="@+id/device_id_value"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="6dp"
@@ -398,6 +400,7 @@
 
          <TextView
             android:id="@+id/sn_label"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/showsn"
@@ -407,6 +410,7 @@
 
         <TextView
             android:id="@+id/sn_value"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="6dp"
