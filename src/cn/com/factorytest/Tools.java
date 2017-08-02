@@ -195,7 +195,7 @@ public class Tools {
         return mTotal;
     }
     
-    public static float getRomSize(Context cnt){
+    public static String getRomSize(Context cnt){
     	 File path = Environment.getDataDirectory();  
          StatFs stat = new StatFs(path.getPath());  
          long blockCount = stat.getBlockCount();  
@@ -204,23 +204,7 @@ public class Tools {
 
          String dataSize = Formatter.formatFileSize(cnt, blockCount*blockSize);
          Log.d("FactoryTest",dataSize);
-         float totalSize = 0 ;
-        if(dataSize.contains("GB")){
-        	if(isGxbaby()){
-        		totalSize =  Float.parseFloat(dataSize.replace("GB", "").trim())*1024+32*5+1024+512*2;
-        	} else {
-        		totalSize =  Float.parseFloat(dataSize.replace("GB", "").trim())*1024+32*4+1024+512;
-        	}
-        }else if(dataSize.contains("MB")){
-        	if(isGxbaby()){
-        		totalSize =  Float.parseFloat(dataSize.replace("MB", "").trim())+32*5+1024+512*2;
-        	} else {
-        		totalSize =  Float.parseFloat(dataSize.replace("MB", "").trim())+32*4+1024+512;
-        	}
-        }
-       //  (32*4+1024+512)*1024
-         return totalSize;
-         //String availableSize = Formatter.formatFileSize(cnt, blockCount*availableBlocks);  
+		 return dataSize;
     }
     
     public static boolean isAndroid5_1_1(){

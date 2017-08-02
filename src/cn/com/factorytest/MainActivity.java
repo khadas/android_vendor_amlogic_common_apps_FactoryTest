@@ -335,7 +335,7 @@ private void updateEthandWifi(){
         super.onResume();
       //  readVersion();
         
-        m_ddr_size.setText(Tools.getmem_TOLAL()/1024+" MB");
+        m_ddr_size.setText((Tools.getmem_TOLAL()*100/1024/1024/100.0)+" MB");
         m_nand_size.setText(Tools.getRomSize(this)+" MB");
         m_firmware_version.setText(Build.VERSION.INCREMENTAL);
         m_device_type.setText(Build.MODEL);
