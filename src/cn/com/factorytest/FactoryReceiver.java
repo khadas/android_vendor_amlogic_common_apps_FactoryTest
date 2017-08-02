@@ -50,6 +50,11 @@ public class FactoryReceiver extends BroadcastReceiver{
 				String fullpath = path+"/"+udiskfile;
 				File file = new File(fullpath);
 				 if(file.exists() && file.isFile()){
+					 try {
+						Thread.sleep(10000);
+					 } catch (InterruptedException e) {
+						 e.printStackTrace();
+					 }
 					 Intent i = new Intent();
 					 i.setClassName("cn.com.factorytest", "cn.com.factorytest.MainActivity");
 					 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
