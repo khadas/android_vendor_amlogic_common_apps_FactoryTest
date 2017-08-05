@@ -40,6 +40,7 @@ public class FactoryReceiver extends BroadcastReceiver{
 				File rebootfile = new File(rebootfullpath);
 				if(rebootfile.exists() && rebootfile.isFile()){
 					try {
+					Thread.sleep(10000);
 					Process proc = Runtime.getRuntime().exec(new String[]{"reboot"});
 					proc.waitFor();
 					} catch (Exception e){
