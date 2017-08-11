@@ -10,6 +10,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.view.View;
 
 public class WriteMacActivity extends Activity {
 	private static final String TAG = "FactoryTest";
@@ -26,6 +27,11 @@ public class WriteMacActivity extends Activity {
 	TextView m_DeviceidAddr_Title;
 	
 	private boolean bIsKeyDown = false;
+
+	private boolean SN_SHOW = false;
+	private boolean USID_SHOW = false;
+	private boolean DEVICE_ID_SHOW = false;
+	private int MAC_LENGTH = 17;
 
 	private final int MSG_TIME = 777;
 	private TimeHandler mHandler = new TimeHandler();	
@@ -56,13 +62,14 @@ public class WriteMacActivity extends Activity {
     {
     	int nTextlen = m_EditMac.getText().toString().length();
 
+
     	if(getResources().getInteger(R.integer.config_mac_length) == nTextlen)
     	{
-    		OnWriteMac();
+			OnWriteMac(false);
     	}
     	if(getResources().getInteger(R.integer.config_mac_length2) == nTextlen)
     	{
-    		OnWriteMac();
+			OnWriteMac(true);
     	}
     	else if(getResources().getInteger(R.integer.config_usid_length) == nTextlen)
     	{
@@ -85,16 +92,20 @@ public class WriteMacActivity extends Activity {
     	}
     }
 
-	public void OnWriteMac()
+	public void OnWriteMac(boolean is_otp)
 	{
 		Log.e(TAG, "public void OnWriteMac()");
 		
 		String strMac = m_EditMac.getText().toString();
 		if(strMac.isEmpty() ) { return; }
-		Log.e(TAG, "strMac : " + strMac);
+		Log.e(TAG, "is_otp = " + is_otp+ " strMac : " + strMac);
 		
 		WriteMac(strMac);
-		ShowMac();	
+		if (is_otp) {
+			ShowMac_OTP();
+		} else {
+			ShowMac();
+		}
 				
 		m_EditMac.setText("");
 		m_EditMac.requestFocus();
@@ -155,6 +166,16 @@ public class WriteMacActivity extends Activity {
 	
 	public void WriteMac(String strMac)
 	{	
+
+		if (getResources().getBoolean(R.bool.config_write_mac_in_otp)) {
+			if (strMac.length() == 17) {
+				String mac = strMac.replaceAll(":","");
+				Log.e(TAG, "OTP MAC= " + mac);
+				Tools.writeFile(Tools.Key_OTP_Mac, mac);
+			}
+			return;
+		}
+
 		Tools.writeFile(Tools.Key_Name, Tools.Key_Mac);
 		
 		String strTmpMac = "";
@@ -189,7 +210,7 @@ public class WriteMacActivity extends Activity {
 		
 		String strNewMac = CHexConver.str2HexStr(strTmpMac);
 		Log.e(TAG, "strNewMac : " + strNewMac);
-		 Tools.writeFile(Tools.Key_Write,  strNewMac);		 
+		Tools.writeFile(Tools.Key_Write,  strNewMac);
 	}
 	
 	public void WriteSn(String strSn)
@@ -224,6 +245,21 @@ public class WriteMacActivity extends Activity {
 		Log.e(TAG, "strMac : " + strMac  + ";  length    : " + strMac.length() );				
 		m_MacAddr.setText(CHexConver.hexStr2Str(strMac) );
 	}
+
+	public void ShowMac_OTP()
+	{
+		String strTmpMac = "";
+		int length = 12;
+		String strMac = Tools.readFile(Tools.Key_OTP_Mac);
+		Log.e(TAG, "strMac : " + strMac  + ";  length    : " + strMac.length() );
+
+		for(int i = 0; i < length; i += 2) {
+
+			strTmpMac += strMac.substring(i, (i + 2) < length ? (i + 2) :  length );
+			if( (i + 2) < length) strTmpMac += ':';
+		}
+		 m_MacAddr.setText(strTmpMac);
+	}
 	
 	public void ShowSn()
 	{
@@ -251,7 +287,7 @@ public class WriteMacActivity extends Activity {
 		Log.e(TAG, "strDeviceid : " + strDeviceid);
 		m_DeviceidAddr.setText(CHexConver.hexStr2Str(strDeviceid) );
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -282,7 +318,20 @@ public class WriteMacActivity extends Activity {
 		m_DeviceidAddr_Title.setText(m_DeviceidAddr_Title.getText().toString() 
 				+ "\t\t\t" + getResources().getInteger(R.integer.config_deviceid_length) + getResources().getString(R.string.showLength) );
 		
-		{	
+		if (!USID_SHOW) {
+			m_UsidAddr_Title.setVisibility(View.GONE);
+			m_UsidAddr.setVisibility(View.GONE);
+		}
+		if (!DEVICE_ID_SHOW) {
+			m_DeviceidAddr_Title.setVisibility(View.GONE);
+			m_DeviceidAddr.setVisibility(View.GONE);
+		}
+
+		if (getResources().getBoolean(R.bool.config_write_mac_in_otp)) {
+			String str_mac = Tools.readFile(Tools.Key_OTP_Mac);
+			ShowMac_OTP();
+
+		} else {
 			if(Tools.isGxbaby()){
 				Tools.writeFile(Tools.Key_Attach, Tools.Key_Attach_Value);
 			}

@@ -10,5 +10,6 @@
 	 <string name="versionfile">/system/etc/version.ini</string>
 	 <string name="lssue_ver">disk_num</string>
 	 <string name="client_ver">customer_version</string>
+	<bool name="config_write_mac_in_otp">true</bool>
 	  
 </resources>

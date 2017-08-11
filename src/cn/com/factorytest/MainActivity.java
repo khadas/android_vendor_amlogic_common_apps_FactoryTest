@@ -54,10 +54,13 @@ import java.util.List;
 public class MainActivity extends Activity {
 
 	private static final String TAG = Tools.TAG;
-    private static final boolean DISABLED_WRITE_MAC = true;
+    private static final boolean DISABLED_WRITE_MAC = false;
 	private static final boolean DISABLED_POWER_LED = true;
 	private static final boolean DISABLED_KEY = true;
 	private static final boolean DISABLED_RTC = true;
+	private static final boolean DISABLED_USB2 = false;
+	private static final boolean DISABLED_DEVICE_ID = true;
+	private static final boolean DISABLED_SN  = true;
     TextView m_firmware_version;
     TextView m_ddr_size;
     TextView m_nand_size;
@@ -195,6 +198,18 @@ public class MainActivity extends Activity {
 		m_TextView_Rtc = (TextView)findViewById(R.id.TextView_Rtc);
 		if(DISABLED_RTC) {
 	    m_TextView_Rtc.setVisibility(View.GONE);
+		}
+
+		if(DISABLED_USB2) {
+			m_TextView_USB2.setVisibility(View.GONE);
+		}
+
+		if(DISABLED_DEVICE_ID) {
+			m_device_id.setVisibility(View.GONE);
+		}
+
+		if(DISABLED_SN) {
+			m_snvalue.setVisibility(View.GONE);
 		}
         
         m_maccheck = (EditText)findViewById(R.id.EditTextMac); 
@@ -356,58 +371,20 @@ private void updateEthandWifi(){
         mountfilter.addDataScheme("file");
         registerReceiver(mountReceiver, mountfilter);
         
-        {
-        	if(Tools.isGxbaby()){
-        		Log.d(TAG," use Gxbaby platform");
-        		Tools.writeFile(Tools.Key_Attach, Tools.Key_Attach_Value);
-        	}
-            String strKeyList = Tools.readFile(Tools.Key_List);
-
-            Log.e(TAG, strKeyList);
-            if(-1 != strKeyList.indexOf(Tools.Key_Mac) )
-            {
-                Tools.writeFile(Tools.Key_Name, Tools.Key_Mac);
-                String strResult =  Tools.readFile(Tools.Key_Read);
-              
-                Log.e(TAG, "strResult : " + strResult  + ";  length    : " + strResult.length() );
-                if(Tools.isGxbaby()){
-                	readMac = strResult;
-                } else {
-                	readMac = CHexConver.hexStr2Str(strResult);
-                }
-                m_macvalue.setText(readMac+" ");
-            }
-
-            if(-1 != strKeyList.indexOf(Tools.Key_Usid) )
-            {
-                Tools.writeFile(Tools.Key_Name, Tools.Key_Usid);
-                String strResult =  Tools.readFile(Tools.Key_Read);
-
-                Log.e(TAG, "strResult : " + strResult  + ";  length    : " + strResult.length() );
-                if(Tools.isGxbaby()){
-                	readSn = strResult;
-                } else {
-                	readSn = CHexConver.hexStr2Str(strResult);
-                }
-                m_snvalue.setText(readSn);
-            }
-            
-            if(-1 != strKeyList.indexOf(Tools.Key_Deviceid) )
-            {
-                Tools.writeFile(Tools.Key_Name, Tools.Key_Deviceid);
-                String strResult =  Tools.readFile(Tools.Key_Read);
-
-                Log.e(TAG, "strResult : " + strResult  + ";  length    : " + strResult.length() );
-                if(Tools.isGxbaby()){
-                	readDeviceid = strResult;
-                } else {
-                	readDeviceid = CHexConver.hexStr2Str(strResult);
-                }
-                m_device_id.setText(readDeviceid);
-            }
-
-        }
-             
+		String strMac = Tools.readFile(Tools.Key_OTP_Mac);
+		int length = strMac.length();
+		if (length != 12) {
+			m_macvalue.setTextColor(Color.RED);
+			m_macvalue.setText("ERR");
+		} else {
+			String strTmpMac = "";
+			for(int i = 0; i < length; i += 2) {
+				strTmpMac += strMac.substring(i, (i + 2) < length ? (i + 2) :  length );
+				if( (i + 2) < length) strTmpMac += ':';
+			}
+			m_macvalue.setTextColor(Color.RED);
+			m_macvalue.setText(strTmpMac+" ");
+		}
         m_maccheck.requestFocus();
        
     }
