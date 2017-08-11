@@ -119,16 +119,6 @@
             android:textSize="25sp" >
         </EditText>
 		
-         <Button
-            android:onClick="Write_mac_usid"
-            android:id="@+id/Button_Writemac"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:textColor="@android:color/white"
-            android:text="@string/write_mac_usid"
-            android:textSize="25sp" >
-        </Button>  
-        
         <Button
             android:onClick="NetLed_Test"
             android:id="@+id/Button_NetLed"
@@ -175,6 +165,17 @@
             android:textColor="@android:color/white" >
         </Button>
 		    
+        <Button
+            android:onClick="Write_mac_usid"
+            android:id="@+id/Button_Writemac"
+            android:paddingLeft="20dp"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/WriteMac"
+            android:textSize="25sp"
+            android:textColor="@android:color/white" >
+        </Button>
 
     </LinearLayout>
     <LinearLayout
