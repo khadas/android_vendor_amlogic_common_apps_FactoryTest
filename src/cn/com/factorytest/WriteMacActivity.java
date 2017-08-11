@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.graphics.Color;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -249,16 +250,22 @@ public class WriteMacActivity extends Activity {
 	public void ShowMac_OTP()
 	{
 		String strTmpMac = "";
-		int length = 12;
 		String strMac = Tools.readFile(Tools.Key_OTP_Mac);
 		Log.e(TAG, "strMac : " + strMac  + ";  length    : " + strMac.length() );
 
-		for(int i = 0; i < length; i += 2) {
+		int length = strMac.length();
+		if (length != 12) {
+			m_MacAddr.setTextColor(Color.RED);
+			m_MacAddr.setText("ERR");
 
-			strTmpMac += strMac.substring(i, (i + 2) < length ? (i + 2) :  length );
-			if( (i + 2) < length) strTmpMac += ':';
+		} else {
+			for(int i = 0; i < length; i += 2) {
+
+				strTmpMac += strMac.substring(i, (i + 2) < length ? (i + 2) :  length );
+				if( (i + 2) < length) strTmpMac += ':';
+				}
+				m_MacAddr.setText(strTmpMac);
 		}
-		 m_MacAddr.setText(strTmpMac);
 	}
 	
 	public void ShowSn()
