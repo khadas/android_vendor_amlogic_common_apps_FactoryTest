@@ -52,7 +52,7 @@ public class FactoryReceiver extends BroadcastReceiver{
 				File file = new File(fullpath);
 				 if(file.exists() && file.isFile()){
 					 try {
-						Thread.sleep(10000);
+						Thread.sleep(5000);
 					 } catch (InterruptedException e) {
 						 e.printStackTrace();
 					 }
