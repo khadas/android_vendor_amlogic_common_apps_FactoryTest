@@ -542,6 +542,15 @@ private void updateEthandWifi(){
 		}
 	}
 
+	public void DisableWol(View view){
+		Log.e(TAG, "DisableWol");
+		try {
+			Process proc = Runtime.getRuntime().exec(new String[]{"su","-c","i2cset -f -y 2 0x18 0x21 0x0"});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
    public void KeyTest(View view){
          Log.e(TAG, "KeyTest()");
 

@@ -175,6 +175,17 @@
             android:textColor="@android:color/white" >
         </Button>
 
+        <Button
+            android:onClick="DisableWol"
+            android:id="@+id/DisableWol"
+            android:paddingLeft="20dp"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/DisableWol"
+            android:textSize="25sp"
+            android:textColor="@android:color/white" >
+        </Button>
 
 		<Button
             android:onClick="KeyTest"
