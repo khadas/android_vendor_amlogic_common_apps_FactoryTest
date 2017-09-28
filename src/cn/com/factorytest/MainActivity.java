@@ -88,6 +88,9 @@ public class MainActivity extends Activity {
     Button m_Button_NetLed;
     Button m_Button_PowerLed;
 	Button m_Button_Key;
+
+    Button m_Button_EnableWol;
+    Button m_Button_DisableWol;
  
 
     Handler mHandler = new FactoryHandler();
@@ -232,6 +235,9 @@ public class MainActivity extends Activity {
         m_Button_Key.setVisibility(View.GONE);
 		}
         
+        m_Button_EnableWol = (Button)findViewById(R.id.EnableWol);
+        m_Button_DisableWol = (Button)findViewById(R.id.DisableWol);
+
         mLeftLayout = (LinearLayout) findViewById(R.id.Layout_Left);
         mBottomLayout = (LinearLayout) findViewById(R.id.Layout_Bottom);
         mBottomLayout2 = (LinearLayout) findViewById(R.id.Layout_Bottom2);
@@ -1156,6 +1162,11 @@ private void updateEthandWifi(){
         mBottomLayout3.setVisibility(View.VISIBLE);
         mBottomLayout4.setVisibility(View.VISIBLE);
         mBottomLayout5.setVisibility(View.VISIBLE);
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+            m_Button_EnableWol.setVisibility(View.VISIBLE);
+            m_Button_DisableWol.setVisibility(View.VISIBLE);
+            return true;
+        }
         return super.onKeyDown(keyCode, event);
     }
 
