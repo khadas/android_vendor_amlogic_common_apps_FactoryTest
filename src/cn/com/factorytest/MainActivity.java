@@ -46,8 +46,6 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.InputStream;
-import java.io.LineNumberReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,7 +61,6 @@ public class MainActivity extends Activity {
 	private static final boolean DISABLED_USB2 = false;
 	private static final boolean DISABLED_DEVICE_ID = true;
 	private static final boolean DISABLED_SN  = true;
-	private static final boolean DISABLED_ETH_TTL = false;
     TextView m_firmware_version;
     TextView m_ddr_size;
     TextView m_nand_size;
@@ -86,7 +83,6 @@ public class MainActivity extends Activity {
     TextView m_TextView_Wifi;
 	TextView m_TextView_BT;
 	TextView m_TextView_Rtc;
-	TextView m_TextView_EthTTL;
     
     Button m_Button_write_mac_usid;
     Button m_Button_NetLed;
@@ -123,8 +119,6 @@ public class MainActivity extends Activity {
 	private final int MSG_RTC_TEST_ERROR = 101;
 	private final int MSG_BT_TEST_ERROR =  102;
 	private final int MSG_BT_TEST_OK =  103;
-	private final int MSG_ETH_TTL_TEST_ERROR = 104;
-	private final int MSG_ETH_TTL_TEST_OK = 105;
     private final int MSG_TIME = 777;
     private static final String nullip = "0.0.0.0";
     private static final String USB_PATH = (Tools.isAndroid5_1_1()?"/storage/udisk":"/storage/external_storage/sd");
@@ -202,11 +196,6 @@ public class MainActivity extends Activity {
         m_TextView_Wifi = (TextView)findViewById(R.id.TextView_Wifi);
 		m_TextView_BT = (TextView)findViewById(R.id.TextView_BT);
 		m_TextView_Rtc = (TextView)findViewById(R.id.TextView_Rtc);
-		m_TextView_EthTTL = (TextView)findViewById(R.id.TextView_EthTTL);
-
-		if (DISABLED_ETH_TTL) {
-			m_TextView_EthTTL.setVisibility(View.GONE);
-		}
 		if(DISABLED_RTC) {
 	    m_TextView_Rtc.setVisibility(View.GONE);
 		}
@@ -259,74 +248,8 @@ public class MainActivity extends Activity {
                 test_Thread();
             }
         }.start();
-
-		if (!DISABLED_ETH_TTL) {
-			new Thread() {
-				public void run() {
-					test_eth_ttl_Thread("192.168.1.1",15,15);
-				}
-			}.start();
-		}
     }
  
-	public void test_eth_ttl_Thread(String address, int countPage, int countDatePack) {
-
-		boolean isEthConnected = NetworkUtils.isEthConnected(this);
-        if(!Tools.isEthUp())
-        {
-			if(!isEthConnected) {
-				return;
-			}
-        }
-
-        Process process = null;
-		String returnMsg = "";
-		int ret = -1;
-		try {
-			process = Runtime.getRuntime().exec(new String[]{"su","-c","ping","-c",
-					Integer.toString(countPage),"-s",
-					Integer.toString(countDatePack),address});
-			InputStreamReader r = new InputStreamReader(process.getInputStream());
-			LineNumberReader returnData = new LineNumberReader(r);
-			String line = "";
-			while ((line = returnData.readLine()) != null) {
-				if(line.contains("loss") && line.contains("%") ){
-					returnMsg += line;
-				}
-			}
-
-		} catch (IOException e) { 
-			e.printStackTrace();
-			mHandler.sendEmptyMessage(MSG_ETH_TTL_TEST_ERROR);
-			return;
-		} finally {
-			try {
-				process.destroy();
-			} catch (Exception e) {
-			}
-		}
-		int index = -1;
-		String splitStr[]= returnMsg.split(",");
-		for(int i=0;i<splitStr.length;i++){
-			if(splitStr[i].contains("loss") && splitStr[i].contains("%")){
-				returnMsg = splitStr[i];
-				index = returnMsg.indexOf('%');
-				break;
-			}
-		}
-		if (index == -1) {
-			mHandler.sendEmptyMessage(MSG_ETH_TTL_TEST_ERROR);
-			return;
-		}
-		String loss = returnMsg.substring(1, index);
-		int count =  Integer.valueOf(loss);
-		if (count > 0) {
-			mHandler.sendEmptyMessage(MSG_ETH_TTL_TEST_ERROR);
-			return;
-		}
-		mHandler.sendEmptyMessage(MSG_ETH_TTL_TEST_OK);
-	}
-
     public void test_Thread() {
         test_volumes();
         test_ETH();
@@ -873,24 +796,6 @@ private void updateEthandWifi(){
 					Log.d(TAG,"MSG_LAN_TEST_ERROR");
                 }
                 break;
-
-				case MSG_ETH_TTL_TEST_OK:
-				{
-					String strTxt = getResources().getString(R.string.EthTTL_Test) + "    " + getResources().getString(R.string.Test_Ok);
-					m_TextView_EthTTL.setText(strTxt);
-					m_TextView_EthTTL.setTextColor(0xFF55FF55);
-					Log.d(TAG,"MSG_ETH_TTL_TEST_OK");
-				}
-				break;
-
-				case MSG_ETH_TTL_TEST_ERROR:
-				{
-					String strTxt = getResources().getString(R.string.EthTTL_Test) + "    " + getResources().getString(R.string.Test_Fail);
-					m_TextView_EthTTL.setText(strTxt);
-					m_TextView_EthTTL.setTextColor(0xFFFF5555);
-					Log.d(TAG,"MSG_ETH_TTL_TEST_ERROR");
-				}
-				break;
 
                 case MSG_WIFI_TEST_OK:
                 {

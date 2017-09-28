@@ -23,7 +23,6 @@
     <string name="btnCvbsVideo">CVBS Video</string>
     <string name="Cvbs_Video">CVBS Video Test</string>
     <string name="Lan_Test">Lan Test</string>
-	<string name="EthTTL_Test">网口三级管测试</string>
     <string name="Wifi_Test">Wifi Test</string>
 	 <string name="BT_Test">BT Test</string>
 	<string name="Rtc_Test">Rtc Test</string>
