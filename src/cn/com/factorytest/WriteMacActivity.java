@@ -170,9 +170,39 @@ public class WriteMacActivity extends Activity {
 
 		if (getResources().getBoolean(R.bool.config_write_mac_in_otp)) {
 			if (strMac.length() == 17) {
-				String mac = strMac.replaceAll(":","");
-				Log.e(TAG, "OTP MAC= " + mac);
-				Tools.writeFile(Tools.Key_OTP_Mac, mac);
+				if((':' == strMac.charAt(2) ) && (':' == strMac.charAt(5) ) && (':' == strMac.charAt(8) ) && (':' == strMac.charAt(11) ) && (':' == strMac.charAt(14) ) ) {
+					String mac = strMac.replaceAll(":","");
+					int length = mac.length();
+					boolean format_err = true;
+					Log.e(TAG, "OTP MAC= " + mac);
+					for (int i=0; i< length; i++) {
+						int value = (int)mac.charAt(i);
+						if(((value > 0x2f) && (value < 0x3a)) || ((value > 0x40) && (value < 0x47)) || ((value > 0x60) && (value < 0x67))) {
+							if (i == 1) {
+								if (value > 0x2f && value < 0x3a) {
+									if (value%2 == 1) {
+										format_err = true;
+										break;
+									}
+								} else {
+									if (value%2 == 0) {
+										format_err = true;
+										break;
+									}
+								}
+							}
+							format_err = false;
+						} else {
+							format_err = true;
+							break;
+						}
+
+					}
+					Log.d(TAG,"MAC ="+ mac + " format_err= "+format_err);
+					if (!format_err) {
+						Tools.writeFile(Tools.Key_OTP_Mac, mac);
+					}
+				}
 			}
 			return;
 		}
