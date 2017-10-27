@@ -221,8 +221,12 @@ public class MainActivity extends Activity {
         m_mactitle = (TextView)findViewById(R.id.MacTitle);
         
         m_Button_write_mac_usid = (Button)findViewById(R.id.Button_Writemac);
-		if(DISABLED_WRITE_MAC) {
-		m_Button_write_mac_usid.setVisibility(View.GONE);
+		if (Build.MODEL.equals("VIM2")) {
+			if(DISABLED_WRITE_MAC) {
+				m_Button_write_mac_usid.setVisibility(View.GONE);
+			}
+		} else {
+			m_Button_write_mac_usid.setVisibility(View.GONE);
 		}
         m_Button_PowerLed = (Button)findViewById(R.id.Button_PowerLed);
         m_Button_NetLed = (Button)findViewById(R.id.Button_NetLed);
@@ -1162,11 +1166,13 @@ private void updateEthandWifi(){
         mBottomLayout3.setVisibility(View.VISIBLE);
         mBottomLayout4.setVisibility(View.VISIBLE);
         mBottomLayout5.setVisibility(View.VISIBLE);
-        if (keyCode == KeyEvent.KEYCODE_MENU) {
-            m_Button_EnableWol.setVisibility(View.VISIBLE);
-            m_Button_DisableWol.setVisibility(View.VISIBLE);
-            return true;
-        }
+		if (Build.MODEL.equals("VIM2")) {
+			if (keyCode == KeyEvent.KEYCODE_MENU) {
+				m_Button_EnableWol.setVisibility(View.VISIBLE);
+				m_Button_DisableWol.setVisibility(View.VISIBLE);
+				return true;
+			}
+		}
         return super.onKeyDown(keyCode, event);
     }
 
