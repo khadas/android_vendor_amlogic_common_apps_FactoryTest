@@ -221,7 +221,7 @@ public class MainActivity extends Activity {
         m_mactitle = (TextView)findViewById(R.id.MacTitle);
         
         m_Button_write_mac_usid = (Button)findViewById(R.id.Button_Writemac);
-		if (Build.MODEL.equals("VIM2")) {
+		if (Build.MODEL.equals("VIM2") || Build.MODEL.equals("VIM2L")) {
 			if(DISABLED_WRITE_MAC) {
 				m_Button_write_mac_usid.setVisibility(View.GONE);
 			}
@@ -1166,7 +1166,7 @@ private void updateEthandWifi(){
         mBottomLayout3.setVisibility(View.VISIBLE);
         mBottomLayout4.setVisibility(View.VISIBLE);
         mBottomLayout5.setVisibility(View.VISIBLE);
-		if (Build.MODEL.equals("VIM2")) {
+		if (Build.MODEL.equals("VIM2") || Build.MODEL.equals("VIM2L")) {
 			if (keyCode == KeyEvent.KEYCODE_MENU) {
 				m_Button_EnableWol.setVisibility(View.VISIBLE);
 				m_Button_DisableWol.setVisibility(View.VISIBLE);
