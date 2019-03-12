@@ -57,7 +57,7 @@ public class MainActivity extends Activity {
     private static final boolean DISABLED_WRITE_MAC = false;
 	private static final boolean DISABLED_POWER_LED = true;
 	private static final boolean DISABLED_KEY = true;
-	private static final boolean DISABLED_RTC = true;
+	private static final boolean DISABLED_RTC = false;
 	private static final boolean DISABLED_USB2 = false;
 	private static final boolean DISABLED_DEVICE_ID = true;
 	private static final boolean DISABLED_SN  = true;
@@ -269,6 +269,7 @@ public class MainActivity extends Activity {
         test_ETH();
 		test_rtc();
         test_BT();  
+        test_RTC();
         test_MCU();
         boolean bWifiOk = false;
 
@@ -520,6 +521,20 @@ private void updateEthandWifi(){
             mHandler.sendEmptyMessage(MSG_MCU_TEST_ERROR);
   }
 	
+  private void test_RTC() {
+
+        String node = "/sys/class/rtc/rtc0/name";
+        File file = new File(node);
+        if (file.exists()) {
+            String name = Tools.readFile(node);
+            if (name.equals("khadas-hym8563"))
+              mHandler.sendEmptyMessage(MSG_RTC_TEST_OK);
+            else
+              mHandler.sendEmptyMessage(MSG_RTC_TEST_ERROR);
+        }
+        else
+            mHandler.sendEmptyMessage(MSG_RTC_TEST_ERROR);
+  }
     private boolean test_Wifi()
     {
 
