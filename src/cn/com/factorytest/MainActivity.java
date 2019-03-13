@@ -92,7 +92,6 @@ public class MainActivity extends Activity {
 	Button m_Button_Key;
 
     Button m_Button_EnableWol;
-    Button m_Button_DisableWol;
  
 
     Handler mHandler = new FactoryHandler();
@@ -253,7 +252,8 @@ public class MainActivity extends Activity {
 		}
         
         m_Button_EnableWol = (Button)findViewById(R.id.EnableWol);
-        m_Button_DisableWol = (Button)findViewById(R.id.DisableWol);
+        if (Build.MODEL.equals("VIM2"))
+		m_Button_EnableWol.setVisibility(View.VISIBLE);
 
         mLeftLayout = (LinearLayout) findViewById(R.id.Layout_Left);
         mBottomLayout = (LinearLayout) findViewById(R.id.Layout_Bottom);
@@ -483,22 +483,10 @@ private void updateEthandWifi(){
     }
 
 	public void EnableWol(View view){
-		Log.e(TAG, "EnableWol");
-		try {
-			Process proc = Runtime.getRuntime().exec(new String[]{"su","-c","i2cset -f -y 2 0x18 0x21 0x1"});
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		Tools.writeFile("/sys/class/wol/test", "1");
+		Tools.writeFile("/sys/class/wol/enable", "1");
 	}
 
-	public void DisableWol(View view){
-		Log.e(TAG, "DisableWol");
-		try {
-			Process proc = Runtime.getRuntime().exec(new String[]{"su","-c","i2cset -f -y 2 0x18 0x21 0x0"});
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 
    public void KeyTest(View view){
          Log.e(TAG, "KeyTest()");
@@ -1227,13 +1215,6 @@ private void updateEthandWifi(){
         mBottomLayout3.setVisibility(View.VISIBLE);
         mBottomLayout4.setVisibility(View.VISIBLE);
         mBottomLayout5.setVisibility(View.VISIBLE);
-		if (Build.MODEL.equals("VIM2") || Build.MODEL.equals("VIM2L")) {
-			if (keyCode == KeyEvent.KEYCODE_MENU) {
-				m_Button_EnableWol.setVisibility(View.VISIBLE);
-				m_Button_DisableWol.setVisibility(View.VISIBLE);
-				return true;
-			}
-		}
         return super.onKeyDown(keyCode, event);
     }
 
