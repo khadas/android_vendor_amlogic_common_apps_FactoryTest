@@ -463,6 +463,12 @@ private void updateEthandWifi(){
         mHandler.sendEmptyMessage(MSG_POWERLED_TEST_Start);
     }
 
+    public void rst_mcu(View view){
+        Log.e(TAG, "rst_mcu()");
+        Tools.writeFile(Tools.Ethernet_Led,"off");
+        Tools.writeFile("/sys/class/fan/rst_mcu", "0");
+    }
+
     public void Write_mac_usid(View view){
     	 Log.e(TAG, "Write_mac_usid()");
     	 m_Button_write_mac_usid.setTag(0);
