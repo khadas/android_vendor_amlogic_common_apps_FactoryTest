@@ -387,6 +387,10 @@ private void updateEthandWifi(){
         m_nand_size.setText(Tools.getRomSize(this));
         m_firmware_version.setText(Build.VERSION.INCREMENTAL);
         m_device_type.setText(Build.MODEL);
+        if (Build.MODEL.equals("VIM2")) {
+           m_device_type.setText(get_VIM2_hwv());
+ 
+        }
         
         updateEthandWifi();
         
@@ -516,6 +520,14 @@ private void updateEthandWifi(){
        mHandler.sendEmptyMessage(MSG_BT_TEST_ERROR);
 	  }
    }
+
+  private String get_VIM2_hwv() {
+       String val = Tools.readFile("/dev/block/env");
+       if (val.indexOf("VIM2.V13") != -1)
+          return "VIM2.V13";
+       else
+          return "VIM2.V12";
+  }
 
   private void test_SPI() {
        String val = Tools.readFile("/dev/block/env");
