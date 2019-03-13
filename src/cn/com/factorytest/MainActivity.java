@@ -80,6 +80,7 @@ public class MainActivity extends Activity {
     TextView m_TextView_USB2;
 
     TextView m_TextView_MCU;
+    TextView m_TextView_HDMI;
     TextView m_TextView_Lan;
     TextView m_TextView_Wifi;
 	TextView m_TextView_BT;
@@ -125,6 +126,8 @@ public class MainActivity extends Activity {
 	private final int MSG_BT_TEST_OK =  103;
 	private final int MSG_MCU_TEST_ERROR =  104;
 	private final int MSG_MCU_TEST_OK =  105;
+	private final int MSG_HDMI_TEST_ERROR =  106;
+	private final int MSG_HDMI_TEST_OK =  107;
     private final int MSG_TIME = 777;
     private static final String nullip = "0.0.0.0";
     private static final String USB_PATH = (Tools.isAndroid5_1_1()?"/storage/udisk":"/storage/external_storage/sd");
@@ -200,6 +203,7 @@ public class MainActivity extends Activity {
 
         m_TextView_Lan = (TextView)findViewById(R.id.TextView_Lan);
         m_TextView_MCU = (TextView)findViewById(R.id.TextView_MCU);
+        m_TextView_HDMI = (TextView)findViewById(R.id.TextView_HDMI);
         m_TextView_Wifi = (TextView)findViewById(R.id.TextView_Wifi);
 		m_TextView_BT = (TextView)findViewById(R.id.TextView_BT);
 		m_TextView_Rtc = (TextView)findViewById(R.id.TextView_Rtc);
@@ -276,6 +280,7 @@ public class MainActivity extends Activity {
         test_BT();  
         test_RTC();
         test_MCU();
+        test_HDMI();
         boolean bWifiOk = false;
 
             for (int i = 0; i < 10; i++) {
@@ -518,6 +523,22 @@ private void updateEthandWifi(){
             mHandler.sendEmptyMessage(MSG_MCU_TEST_OK);
         else
             mHandler.sendEmptyMessage(MSG_MCU_TEST_ERROR);
+  }
+
+  private void test_HDMI() {
+
+        String node = "/sys/class/amhdmitx/amhdmitx0/edid_parsing";
+        File file = new File(node);
+        if (file.exists()) {
+            String value = Tools.readFile(node);
+            Log.d(TAG, "===hdmi i2c===="+value+"======");
+            if (value.equals("ok"))
+              mHandler.sendEmptyMessage(MSG_HDMI_TEST_OK);
+            else
+              mHandler.sendEmptyMessage(MSG_HDMI_TEST_ERROR);
+        }
+        else
+            mHandler.sendEmptyMessage(MSG_HDMI_TEST_ERROR);
   }
 	
   private void test_RTC() {
@@ -831,6 +852,26 @@ private void updateEthandWifi(){
                     m_TextView_Lan.setText(strTxt);
                     m_TextView_Lan.setTextColor(0xFFFF5555);
 					Log.d(TAG,"MSG_LAN_TEST_ERROR");
+                }
+                break;
+
+                case  MSG_HDMI_TEST_OK:
+                {
+                    String strTxt = getResources().getString(R.string.HDMI_Test) + "    " + getResources().getString(R.string.Test_Ok);
+
+                    m_TextView_HDMI.setText(strTxt);
+                    m_TextView_HDMI.setTextColor(0xFF55FF55);
+					Log.d(TAG,"MSG_HDMI_TEST_OK");
+                }
+                break;
+
+                case  MSG_HDMI_TEST_ERROR:
+                {
+                    String strTxt = getResources().getString(R.string.HDMI_Test) + "    " + getResources().getString(R.string.Test_Fail);
+
+                    m_TextView_HDMI.setText(strTxt);
+                    m_TextView_HDMI.setTextColor(0xFFFF5555);
+					Log.d(TAG,"MSG_HDMI_TEST_ERROR");
                 }
                 break;
 
