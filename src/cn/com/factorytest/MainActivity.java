@@ -79,6 +79,7 @@ public class MainActivity extends Activity {
     TextView m_TextView_USB1;
     TextView m_TextView_USB2;
 
+    TextView m_TextView_SPI;
     TextView m_TextView_MCU;
     TextView m_TextView_HDMI;
     TextView m_TextView_Lan;
@@ -127,6 +128,8 @@ public class MainActivity extends Activity {
 	private final int MSG_MCU_TEST_OK =  105;
 	private final int MSG_HDMI_TEST_ERROR =  106;
 	private final int MSG_HDMI_TEST_OK =  107;
+	private final int MSG_SPI_TEST_ERROR =  108;
+	private final int MSG_SPI_TEST_OK =  109;
     private final int MSG_TIME = 777;
     private static final String nullip = "0.0.0.0";
     private static final String USB_PATH = (Tools.isAndroid5_1_1()?"/storage/udisk":"/storage/external_storage/sd");
@@ -202,6 +205,7 @@ public class MainActivity extends Activity {
 
         m_TextView_Lan = (TextView)findViewById(R.id.TextView_Lan);
         m_TextView_MCU = (TextView)findViewById(R.id.TextView_MCU);
+        m_TextView_SPI = (TextView)findViewById(R.id.TextView_SPI);
         m_TextView_HDMI = (TextView)findViewById(R.id.TextView_HDMI);
         m_TextView_Wifi = (TextView)findViewById(R.id.TextView_Wifi);
 		m_TextView_BT = (TextView)findViewById(R.id.TextView_BT);
@@ -252,9 +256,10 @@ public class MainActivity extends Activity {
 		}
         
         m_Button_EnableWol = (Button)findViewById(R.id.EnableWol);
-        if (Build.MODEL.equals("VIM2"))
+        if (Build.MODEL.equals("VIM2")) {
 		m_Button_EnableWol.setVisibility(View.VISIBLE);
-
+                m_TextView_SPI.setVisibility(View.VISIBLE);
+        }
         mLeftLayout = (LinearLayout) findViewById(R.id.Layout_Left);
         mBottomLayout = (LinearLayout) findViewById(R.id.Layout_Bottom);
         mBottomLayout2 = (LinearLayout) findViewById(R.id.Layout_Bottom2);
@@ -281,6 +286,8 @@ public class MainActivity extends Activity {
         test_RTC();
         test_MCU();
         test_HDMI();
+        if (Build.MODEL.equals("VIM2"))
+            test_SPI();
         boolean bWifiOk = false;
 
             for (int i = 0; i < 10; i++) {
@@ -509,6 +516,14 @@ private void updateEthandWifi(){
        mHandler.sendEmptyMessage(MSG_BT_TEST_ERROR);
 	  }
    }
+
+  private void test_SPI() {
+       String val = Tools.readFile("/dev/block/env");
+       if (val.indexOf("spi_ok") != -1)
+          mHandler.sendEmptyMessage(MSG_SPI_TEST_OK);
+       else
+          mHandler.sendEmptyMessage(MSG_SPI_TEST_ERROR);
+  }
     
   private void test_MCU() {
 
@@ -869,6 +884,25 @@ private void updateEthandWifi(){
                 }
                 break;
 
+                case  MSG_SPI_TEST_OK:
+                {
+                    String strTxt = getResources().getString(R.string.SPI_Test) + "    " + getResources().getString(R.string.Test_Ok);
+
+                    m_TextView_SPI.setText(strTxt);
+                    m_TextView_SPI.setTextColor(0xFF55FF55);
+					Log.d(TAG,"MSG_SPI_TEST_OK");
+                }
+                break;
+
+                case  MSG_SPI_TEST_ERROR:
+                {
+                    String strTxt = getResources().getString(R.string.SPI_Test) + "    " + getResources().getString(R.string.Test_Fail);
+
+                    m_TextView_SPI.setText(strTxt);
+                    m_TextView_SPI.setTextColor(0xFFFF5555);
+					Log.d(TAG,"MSG_SPI_TEST_ERROR");
+                }
+                break;
                 case  MSG_MCU_TEST_OK:
                 {
                     String strTxt = getResources().getString(R.string.MCU_Test) + "    " + getResources().getString(R.string.Test_Ok);

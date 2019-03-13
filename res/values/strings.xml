@@ -17,6 +17,7 @@
     <string name="DeviceidAddr">Deviceid Address:</string>
     <string name="TF_Test">TF Test</string>
     <string name="MCU_Test">MCU I2C Test</string>
+    <string name="SPI_Test">SPI Test</string>
     <string name="HDMI_Test">HDMI I2C Test</string>
     <string name="RstMcu">复位MCU</string>
     <string name="USB1_Test">USB1 Test</string>
