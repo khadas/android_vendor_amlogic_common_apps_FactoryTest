@@ -86,7 +86,7 @@ public class MainActivity extends Activity {
 	TextView m_TextView_Rtc;
     
     Button m_Button_write_mac_usid;
-    Button m_Button_NetLed;
+    TextView m_TextView_NetLed;
     Button m_Button_PowerLed;
 	Button m_Button_Key;
 
@@ -233,7 +233,12 @@ public class MainActivity extends Activity {
 			m_Button_write_mac_usid.setVisibility(View.GONE);
 		}
         m_Button_PowerLed = (Button)findViewById(R.id.Button_PowerLed);
-        m_Button_NetLed = (Button)findViewById(R.id.Button_NetLed);
+        m_TextView_NetLed = (TextView)findViewById(R.id.Button_NetLed);
+        if (Build.MODEL.equals("VIM2"))
+           m_TextView_NetLed.setText(getResources().getString(R.string.Led_white_Test));
+        else
+           m_TextView_NetLed.setText(getResources().getString(R.string.Led_red_Test));
+
 		if(DISABLED_POWER_LED) {
         m_Button_PowerLed.setVisibility(View.GONE);
 		}
@@ -445,12 +450,6 @@ private void updateEthandWifi(){
         unregisterReceiver(mountReceiver);
     }
 
-    public void NetLed_Test(View view){
-        Log.e(TAG, "NetLed_Test()");
-        m_Button_NetLed.setTag(0);
-        mHandler.removeMessages(MSG_NETLED_TEST_Start);
-        mHandler.sendEmptyMessage(MSG_NETLED_TEST_Start);
-    }
 
     public void PowerLed_Test(View view){
         Log.e(TAG, "PowerLed_Test()");
@@ -900,35 +899,6 @@ private void updateEthandWifi(){
 
 				}
 				break;
-                case MSG_NETLED_TEST_Start:
-                    tag_net ++;
-                    if(tag_net > ledtime){
-                   	 mHandler.removeMessages(MSG_NETLED_TEST_Start);
-                   	 mHandler.sendEmptyMessage(MSG_NETLED_TEST_End);
-                   	 return ;
-                   } 
-                    Log.d(TAG, "MSG_NETLED_TEST_Start: " + tag_net);
-                    if(tag_net % 2 == 1 ){
-                    	m_Button_NetLed.setText(getResources().getString(R.string.Led_TestIng)+"!");
-                        Tools.writeFile(Tools.Ethernet_Led,"off");
-                        mHandler.removeMessages(MSG_NETLED_TEST_Start);
-                        mHandler.sendEmptyMessageDelayed(MSG_NETLED_TEST_Start, 1000);
-                    }else if(tag_net % 2 == 0){
-                    	 m_Button_NetLed.setText(getResources().getString(R.string.Led_TestIng)+"!!");
-                        Tools.writeFile(Tools.Ethernet_Led,"default-on");
-                        mHandler.removeMessages(MSG_NETLED_TEST_Start);
-                        mHandler.sendEmptyMessageDelayed(MSG_NETLED_TEST_Start, 1000);
-                    }
-                    break;
-                case MSG_NETLED_TEST_End:
-                    tag_net = 0;
-                    m_Button_NetLed.setText(getResources().getString(R.string.Led_Test));
-                    if(Tools.isNetworkAvailable(MainActivity.this)){
-                        Tools.writeFile(Tools.Ethernet_Led,"on");
-                    }else{
-                        Tools.writeFile(Tools.Ethernet_Led,"default-on");
-                    }
-                    break;
                 case MSG_POWERLED_TEST_Start:
                     tag_power ++;
                     if(tag_power > ledtime){
@@ -1037,10 +1007,6 @@ private void updateEthandWifi(){
        Toast.makeText(getApplicationContext(),getResources().getString(R.string.testled), Toast.LENGTH_LONG).show();
        m_mactitle.setText(readMac + "   "+ getResources().getString(R.string.the_same_mac));
        m_mactitle.setTextColor(Color.GREEN);
-       			Log.e(TAG, "NetLed_Test()");
-                m_Button_NetLed.setTag(0);
-                mHandler.removeMessages(MSG_NETLED_TEST_Start);
-                mHandler.sendEmptyMessage(MSG_NETLED_TEST_Start);
 
         		Log.e(TAG, "PowerLed_Test()");
                 m_Button_PowerLed.setTag(0);

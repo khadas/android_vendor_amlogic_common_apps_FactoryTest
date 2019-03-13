@@ -129,15 +129,15 @@
             android:textSize="25sp" >
         </EditText>
 		
-        <Button
+        <TextView
             android:onClick="NetLed_Test"
             android:id="@+id/Button_NetLed"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:textColor="@android:color/white"
-            android:text="@string/Led_Test"
+            android:textColor="#FF5555FF"
+            android:text="@string/Led_white_Test"
             android:textSize="25sp" >
-        </Button>
+        </TextView>
 
         <Button
             android:onClick="PowerLed_Test"
