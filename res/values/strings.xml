@@ -22,6 +22,7 @@
     <string name="RstMcu">复位MCU</string>
     <string name="USB1_Test">USB1</string>
     <string name="USB2_Test">USB2</string>
+    <string name="Gigabit_Test">Gigabit Test</string>
     <string name="Test_Fail">fail</string>
     <string name="Test_Ok">pass</string>
     <string name="btnCvbsVideo">CVBS Video</string>

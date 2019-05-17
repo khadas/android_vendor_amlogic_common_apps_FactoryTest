@@ -82,6 +82,7 @@ public class MainActivity extends Activity {
     TextView m_TextView_SPI;
     TextView m_TextView_MCU;
     TextView m_TextView_HDMI;
+    TextView m_TextView_Gigabit;
     TextView m_TextView_Lan;
     TextView m_TextView_Wifi;
 	TextView m_TextView_BT;
@@ -130,6 +131,8 @@ public class MainActivity extends Activity {
 	private final int MSG_HDMI_TEST_OK =  107;
 	private final int MSG_SPI_TEST_ERROR =  108;
 	private final int MSG_SPI_TEST_OK =  109;
+	private final int MSG_GIGABIT_TEST_ERROR =  110;
+	private final int MSG_GIGABIT_TEST_OK =  111;
     private final int MSG_TIME = 777;
     private static final String nullip = "0.0.0.0";
     private static final String USB_PATH = (Tools.isAndroid5_1_1()?"/storage/udisk":"/storage/external_storage/sd");
@@ -203,6 +206,7 @@ public class MainActivity extends Activity {
         m_TextView_USB1 = (TextView)findViewById(R.id.TextView_USB1);
         m_TextView_USB2 = (TextView)findViewById(R.id.TextView_USB2);
 
+        m_TextView_Gigabit = (TextView)findViewById(R.id.TextView_Gigabit);
         m_TextView_Lan = (TextView)findViewById(R.id.TextView_Lan);
         m_TextView_MCU = (TextView)findViewById(R.id.TextView_MCU);
         m_TextView_SPI = (TextView)findViewById(R.id.TextView_SPI);
@@ -259,6 +263,7 @@ public class MainActivity extends Activity {
         if (Build.MODEL.equals("VIM2")) {
 		m_Button_EnableWol.setVisibility(View.VISIBLE);
                 m_TextView_SPI.setVisibility(View.VISIBLE);
+		m_TextView_Gigabit.setVisibility(View.VISIBLE);
         }
         mLeftLayout = (LinearLayout) findViewById(R.id.Layout_Left);
         mBottomLayout = (LinearLayout) findViewById(R.id.Layout_Bottom);
@@ -286,6 +291,7 @@ public class MainActivity extends Activity {
         test_RTC();
         test_MCU();
         test_HDMI();
+        test_Gigabit();
         if (Build.MODEL.equals("VIM2"))
             test_SPI();
         boolean bWifiOk = false;
@@ -560,6 +566,21 @@ private void updateEthandWifi(){
         }
         else
             mHandler.sendEmptyMessage(MSG_HDMI_TEST_ERROR);
+  }
+
+  private void test_Gigabit() {
+
+        String node = "/sys/class/net/eth0/speed";
+        File file = new File(node);
+        if (file.exists()) {
+            String rate = Tools.readFile(node);
+            if (rate.equals("1000"))
+              mHandler.sendEmptyMessage(MSG_GIGABIT_TEST_OK);
+            else
+              mHandler.sendEmptyMessage(MSG_GIGABIT_TEST_ERROR);
+        }
+        else
+            mHandler.sendEmptyMessage(MSG_GIGABIT_TEST_ERROR);
   }
 	
   private void test_RTC() {
@@ -876,6 +897,25 @@ private void updateEthandWifi(){
                 }
                 break;
 
+                case  MSG_GIGABIT_TEST_OK:
+                {
+                    String strTxt = getResources().getString(R.string.Gigabit_Test) + "    " + getResources().getString(R.string.Test_Ok);
+
+                    m_TextView_Gigabit.setText(strTxt);
+                    m_TextView_Gigabit.setTextColor(0xFF55FF55);
+					Log.d(TAG,"MSG_GIGABIT_TEST_OK");
+                }
+                break;
+
+                case  MSG_GIGABIT_TEST_ERROR:
+                {
+                    String strTxt = getResources().getString(R.string.Gigabit_Test) + "    " + getResources().getString(R.string.Test_Fail);
+
+                    m_TextView_Gigabit.setText(strTxt);
+                    m_TextView_Gigabit.setTextColor(0xFFFF5555);
+					Log.d(TAG,"MSG_GIGABIT_TEST_ERROR");
+                }
+                break;
                 case  MSG_HDMI_TEST_OK:
                 {
                     String strTxt = getResources().getString(R.string.HDMI_Test) + "    " + getResources().getString(R.string.Test_Ok);

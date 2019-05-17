@@ -93,6 +93,17 @@
         </TextView>
 
         <TextView
+            android:id="@+id/TextView_Gigabit"
+            android:visibility="gone"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/Gigabit_Test"
+            android:textSize="25sp"
+            android:textColor="#FF5555FF">
+        </TextView>
+
+        <TextView
             android:id="@+id/TextView_Lan"
             android:layout_weight="1"
             android:layout_width="match_parent"
