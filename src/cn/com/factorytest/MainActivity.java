@@ -280,6 +280,22 @@ public class MainActivity extends Activity {
                 test_Thread();
             }
         }.start();
+        new Thread() {
+            public void run() {
+		while(true) {
+			try {
+				Tools.writeFile(Tools.Red_Led, "2");
+				Tools.writeFile(Tools.White_Led,"default-on");
+				Thread.sleep(1000);
+				Tools.writeFile(Tools.White_Led, "off");
+				Tools.writeFile(Tools.Red_Led, "1");
+				Thread.sleep(1000);
+			}  catch(Exception localException1){
+
+			}
+		}
+            }
+        }.start();
     }
  
     public void test_Thread() {
@@ -485,7 +501,8 @@ private void updateEthandWifi(){
 
     public void rst_mcu(View view){
         Log.e(TAG, "rst_mcu()");
-        Tools.writeFile(Tools.Ethernet_Led,"off");
+        Tools.writeFile(Tools.White_Led,"off");
+        Tools.writeFile(Tools.Red_Led,"off");
         Tools.writeFile("/sys/class/fan/rst_mcu", "0");
     }
 
@@ -1191,7 +1208,6 @@ private void updateEthandWifi(){
                 if(Tools.isNetworkAvailable(context)){
 				   if(Tools.isEthUp()) {	
                     mHandler.sendEmptyMessage(MSG_LAN_TEST_OK);
-                    Tools.writeFile(Tools.Ethernet_Led,"on");
 				    }
                 }
                 updateEthandWifi();

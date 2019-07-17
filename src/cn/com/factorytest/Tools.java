@@ -55,7 +55,9 @@ public class Tools {
 
     //public static  final String Ethernet_Led = "/proc/ledlight/netled/state";
     public static  final String Power_Led = "/proc/ledlight/powerled/state";
-	public static  final String Ethernet_Led = "/sys/class/leds/led-sys/trigger";
+	public static  final String Ethernet_Led = "/sys/class/leds/sys_led/trigger";
+	public static  final String Red_Led = "/sys/class/redled/mode";
+	public static  final String White_Led = "/sys/class/leds/sys_led/trigger";
     public static  final String Ethernet_status = "/sys/class/net/eth0/operstate";
 	public static  final String Rtc_time = "/sys/class/rtc/rtc0/time";
 
