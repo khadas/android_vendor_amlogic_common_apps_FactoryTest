@@ -261,7 +261,6 @@ public class MainActivity extends Activity {
         
         m_Button_EnableWol = (Button)findViewById(R.id.EnableWol);
          if (Build.MODEL.equals("VIM2") || Build.MODEL.equals("VIM3")) {
-		m_Button_EnableWol.setVisibility(View.VISIBLE);
                 m_TextView_SPI.setVisibility(View.VISIBLE);
 		m_TextView_Gigabit.setVisibility(View.VISIBLE);
         }
