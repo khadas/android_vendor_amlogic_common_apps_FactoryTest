@@ -8,4 +8,7 @@ LOCAL_PACKAGE_NAME := FactoryTest
 LOCAL_CERTIFICATE := platform
 #LOCAL_DEX_PREOPT := false
 
+
+LOCAL_PRIVATE_PLATFORM_APIS := true
+
 include $(BUILD_PACKAGE)
