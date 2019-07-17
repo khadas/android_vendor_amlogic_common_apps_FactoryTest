@@ -416,11 +416,15 @@ private void updateEthandWifi(){
         
 		String strMac = Tools.readFile(Tools.Key_OTP_Mac);
 		int length = strMac.length();
-		if (length != 12) {
+		if (length != 42) {
 			m_macvalue.setTextColor(Color.RED);
 			m_macvalue.setText("ERR");
 		} else {
-			String strTmpMac = "";
+			String strTmpMac = strMac.substring(6);
+			length = strTmpMac.length();
+			strTmpMac = strTmpMac.substring(0,length-1);
+			strMac = CHexConver.hexStr2Str(strTmpMac);
+			length = strMac.length();
 			for(int i = 0; i < length; i += 2) {
 				strTmpMac += strMac.substring(i, (i + 2) < length ? (i + 2) :  length );
 				if( (i + 2) < length) strTmpMac += ':';

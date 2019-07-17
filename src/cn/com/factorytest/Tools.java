@@ -36,6 +36,7 @@ public class Tools {
 	public static final String Gxbaby_platform_name = "gxbaby";
 	public static final String Gxl_platform_name  = "gxl";
 	public static final String Gxm_platform_name  = "gxm";
+	public static final String G12b_platform_name = "g12b";
 	
     public static final String Key_List =(isGxbaby()?"/sys/class/unifykeys/list":"/sys/class/aml_keys/aml_keys/key_list");
     public static final String Key_Name = (isGxbaby()?"/sys/class/unifykeys/name":"/sys/class/aml_keys/aml_keys/key_name");
@@ -214,7 +215,8 @@ public class Tools {
     public static boolean isGxbaby(){
     	return Gxbaby_platform_name.equals(SystemProperties.get("ro.board.platform"))
 					|| Gxl_platform_name.equals(SystemProperties.get("ro.board.platform"))
-					|| Gxm_platform_name.equals(SystemProperties.get("ro.board.platform"));
+					|| Gxm_platform_name.equals(SystemProperties.get("ro.board.platform"))
+					|| G12b_platform_name.equals(SystemProperties.get("ro.board.platform"));
     }
 	
 	/**

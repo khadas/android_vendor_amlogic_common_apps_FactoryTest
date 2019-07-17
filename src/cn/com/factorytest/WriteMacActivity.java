@@ -236,7 +236,6 @@ public class WriteMacActivity extends Activity {
 		{
 			strTmpMac = "";
 		}
-		
 		Log.e(TAG, "strTmpMac : " + strTmpMac);
 		
 		String strNewMac = CHexConver.str2HexStr(strTmpMac);
@@ -280,21 +279,29 @@ public class WriteMacActivity extends Activity {
 	public void ShowMac_OTP()
 	{
 		String strTmpMac = "";
+		String endMac = "";
 		String strMac = Tools.readFile(Tools.Key_OTP_Mac);
 		Log.e(TAG, "strMac : " + strMac  + ";  length    : " + strMac.length() );
 
+		char[] mac = new char[12];
 		int length = strMac.length();
-		if (length != 12) {
+		if (length != 42) {
 			m_MacAddr.setTextColor(Color.RED);
 			m_MacAddr.setText("ERR");
 
 		} else {
-			for(int i = 0; i < length; i += 2) {
-
-				strTmpMac += strMac.substring(i, (i + 2) < length ? (i + 2) :  length );
-				if( (i + 2) < length) strTmpMac += ':';
-				}
-				m_MacAddr.setText(strTmpMac);
+			strTmpMac = strMac.substring(6);
+			length = strTmpMac.length();
+			strTmpMac = strTmpMac.substring(0,length-1);
+			Log.e(TAG, "===strTmpMac : " + strTmpMac);
+			strTmpMac = CHexConver.hexStr2Str(strTmpMac);
+			length = strTmpMac.length();
+			for(int i = 0; i < length; i += 2)
+			{
+				endMac += strTmpMac.substring(i, (i + 2) < length ? (i + 2) :  length );
+				if( (i + 2) < length) endMac += ':';
+			}
+				m_MacAddr.setText(""+endMac);
 		}
 	}
 	
