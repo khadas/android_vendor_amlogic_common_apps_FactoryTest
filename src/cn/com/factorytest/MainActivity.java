@@ -503,7 +503,7 @@ private void updateEthandWifi(){
         Log.e(TAG, "rst_mcu()");
         Tools.writeFile(Tools.White_Led,"off");
         Tools.writeFile(Tools.Red_Led,"off");
-        Tools.writeFile("/sys/class/fan/rst_mcu", "0");
+        Tools.writeFile("/sys/class/mcu/rst", "0");
     }
 
     public void Write_mac_usid(View view){
