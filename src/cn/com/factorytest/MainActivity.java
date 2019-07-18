@@ -709,21 +709,52 @@ private void updateEthandWifi(){
 			mHandler.sendEmptyMessage(MSG_USB1_TEST_XL_ERROR);
 			mHandler.sendEmptyMessage(MSG_USB2_TEST_XL_ERROR);
 		}
-		
-		if(usbOrSd[1]){
-			mHandler.sendEmptyMessage(MSG_USB1_TEST_XL_OK);
-		}else{
+		String val = Tools.readFile("/sys/kernel/debug/usb/devices");
+		if (val.indexOf("(O)") == -1) {
+			Log.e(TAG, "=========USB2.0 and USB3.0 is bad");
 			mHandler.sendEmptyMessage(MSG_USB1_TEST_XL_ERROR);
-		}
-		
-		if(usbOrSd[2]){
-			mHandler.sendEmptyMessage(MSG_USB2_TEST_XL_OK);
-		}else{
 			mHandler.sendEmptyMessage(MSG_USB2_TEST_XL_ERROR);
+			return;
+		}
+		int length;
+		String[] list = val.split("T:|B:|D:|P:|S:|C:|I:|E:");
+		int num = -1;
+		int count = getSubCount(val, "(I)");
+		String[] tmp = new String[count];
+		for (int z=0; z< list.length; z++) {
+
+			if (list[z].indexOf("Bus=") != -1) {
+				num++;
+			}
+			if (num == count)
+				break;
+			if (num == -1)
+				continue;
+			tmp[num] = tmp[num] + list[z];
+		}
+		for (int i=0; i< tmp.length; i++) {
+			if ((tmp[i].indexOf("(O)") != -1) && (tmp[i].indexOf("Bus=02") != -1)) {
+				Log.d(TAG, "USB3.0 is OK");
+				mHandler.sendEmptyMessage(MSG_USB2_TEST_XL_OK);
+			}
+			if ((tmp[i].indexOf("(O)") != -1) && (tmp[i].indexOf("Bus=01") != -1) && (tmp[i].indexOf("Port=01") != -1)) {
+				Log.d("TAG", "USB2.0 is OK");
+				mHandler.sendEmptyMessage(MSG_USB1_TEST_XL_OK);
+			}
 		}
 		
 	}
 	
+
+    private  int getSubCount(String str, String key) {
+        int count = 0;
+        int index = 0;
+        while ((index = str.indexOf(key, index)) != -1) {
+             index = index + key.length();
+             count++;
+        }
+        return count;
+    }
 	
     private void test_android5_1(){
 		Log.d(TAG, "----- android5.1 -----");
