@@ -558,7 +558,7 @@ private void updateEthandWifi(){
 
   private void test_SPI() {
        String val = Tools.readFile("/dev/block/env");
-       if (val.indexOf("spi_ok") != -1)
+       if (val.indexOf("spi_state=1") != -1)
           mHandler.sendEmptyMessage(MSG_SPI_TEST_OK);
        else
           mHandler.sendEmptyMessage(MSG_SPI_TEST_ERROR);
