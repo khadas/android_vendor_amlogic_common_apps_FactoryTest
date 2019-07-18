@@ -440,12 +440,13 @@ private void updateEthandWifi(){
 			strTmpMac = strTmpMac.substring(0,length-1);
 			strMac = CHexConver.hexStr2Str(strTmpMac);
 			length = strMac.length();
+			String Mac = "";
 			for(int i = 0; i < length; i += 2) {
-				strTmpMac += strMac.substring(i, (i + 2) < length ? (i + 2) :  length );
-				if( (i + 2) < length) strTmpMac += ':';
+				Mac += strMac.substring(i, (i + 2) < length ? (i + 2) :  length );
+				if( (i + 2) < length) Mac += ':';
 			}
 			m_macvalue.setTextColor(Color.RED);
-			m_macvalue.setText(strTmpMac+" ");
+			m_macvalue.setText(Mac+" ");
 		}
         m_maccheck.requestFocus();
        
