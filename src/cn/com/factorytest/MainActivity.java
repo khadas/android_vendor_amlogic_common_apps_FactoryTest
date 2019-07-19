@@ -82,6 +82,7 @@ public class MainActivity extends Activity {
     TextView m_TextView_SPI;
     TextView m_TextView_MCU;
     TextView m_TextView_HDMI;
+    TextView m_TextView_FUSB302;
     TextView m_TextView_Gigabit;
     TextView m_TextView_Lan;
     TextView m_TextView_Wifi;
@@ -133,6 +134,8 @@ public class MainActivity extends Activity {
 	private final int MSG_SPI_TEST_OK =  109;
 	private final int MSG_GIGABIT_TEST_ERROR =  110;
 	private final int MSG_GIGABIT_TEST_OK =  111;
+	private final int MSG_FUSB302_TEST_ERROR =  112;
+	private final int MSG_FUSB302_TEST_OK =  113;
     private final int MSG_TIME = 777;
     private static final String nullip = "0.0.0.0";
     private static final String USB_PATH = (Tools.isAndroid5_1_1()?"/storage/udisk":"/storage/external_storage/sd");
@@ -211,6 +214,7 @@ public class MainActivity extends Activity {
         m_TextView_MCU = (TextView)findViewById(R.id.TextView_MCU);
         m_TextView_SPI = (TextView)findViewById(R.id.TextView_SPI);
         m_TextView_HDMI = (TextView)findViewById(R.id.TextView_HDMI);
+        m_TextView_FUSB302 = (TextView)findViewById(R.id.TextView_FUSB302);
         m_TextView_Wifi = (TextView)findViewById(R.id.TextView_Wifi);
 		m_TextView_BT = (TextView)findViewById(R.id.TextView_BT);
 		m_TextView_Rtc = (TextView)findViewById(R.id.TextView_Rtc);
@@ -303,6 +307,7 @@ public class MainActivity extends Activity {
         test_ETH();
 		test_rtc();
         test_BT();  
+	test_FUSB302();
         test_RTC();
         test_MCU();
         test_HDMI();
@@ -562,6 +567,14 @@ private void updateEthandWifi(){
           mHandler.sendEmptyMessage(MSG_SPI_TEST_OK);
        else
           mHandler.sendEmptyMessage(MSG_SPI_TEST_ERROR);
+  }
+
+  private void test_FUSB302() {
+       String val = Tools.readFile("/dev/block/env");
+       if (val.indexOf("fusb302_state=1") != -1)
+          mHandler.sendEmptyMessage(MSG_FUSB302_TEST_OK);
+       else
+          mHandler.sendEmptyMessage(MSG_FUSB302_TEST_ERROR);
   }
     
   private void test_MCU() {
@@ -985,6 +998,26 @@ private void updateEthandWifi(){
                     m_TextView_HDMI.setText(strTxt);
                     m_TextView_HDMI.setTextColor(0xFFFF5555);
 					Log.d(TAG,"MSG_HDMI_TEST_ERROR");
+                }
+                break;
+
+                case  MSG_FUSB302_TEST_OK:
+                {
+                    String strTxt = getResources().getString(R.string.FUSB302_Test) + "    " + getResources().getString(R.string.Test_Ok);
+
+                    m_TextView_FUSB302.setText(strTxt);
+                    m_TextView_FUSB302.setTextColor(0xFF55FF55);
+					Log.d(TAG,"MSG_FUSB302_TEST_OK");
+                }
+                break;
+
+                case  MSG_FUSB302_TEST_ERROR:
+                {
+                    String strTxt = getResources().getString(R.string.FUSB302_Test) + "    " + getResources().getString(R.string.Test_Fail);
+
+                    m_TextView_FUSB302.setText(strTxt);
+                    m_TextView_FUSB302.setTextColor(0xFFFF5555);
+					Log.d(TAG,"MSG_FUSB302_TEST_ERROR");
                 }
                 break;
 

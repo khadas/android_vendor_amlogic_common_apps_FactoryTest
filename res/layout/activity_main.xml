@@ -93,6 +93,16 @@
         </TextView>
 
         <TextView
+            android:id="@+id/TextView_FUSB302"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="#FF5555FF"
+            android:text="@string/FUSB302_Test"
+            android:textSize="25sp" >
+        </TextView>
+
+        <TextView
             android:id="@+id/TextView_Gigabit"
             android:visibility="gone"
             android:layout_weight="1"

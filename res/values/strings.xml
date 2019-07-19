@@ -19,6 +19,7 @@
     <string name="MCU_Test">MCU I2C</string>
     <string name="SPI_Test">SPI</string>
     <string name="HDMI_Test">HDMI I2C</string>
+    <string name="FUSB302_Test">FUSB302 I2C</string>
     <string name="RstMcu">复位MCU</string>
     <string name="USB1_Test">USB2.0</string>
     <string name="USB2_Test">USB3.0</string>
