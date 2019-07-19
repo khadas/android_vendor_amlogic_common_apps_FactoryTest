@@ -593,15 +593,15 @@ private void updateEthandWifi(){
 
   private void test_HDMI() {
 
-        String node = "/sys/class/amhdmitx/amhdmitx0/edid_parsing";
+        String node = "/sys/class/amhdmitx/amhdmitx0/edid";
         File file = new File(node);
         if (file.exists()) {
             String value = Tools.readFile(node);
             Log.d(TAG, "===hdmi i2c===="+value+"======");
-            if (value.equals("ok"))
-              mHandler.sendEmptyMessage(MSG_HDMI_TEST_OK);
-            else
+            if (value.indexOf("EDID Version: 0.0") != -1)
               mHandler.sendEmptyMessage(MSG_HDMI_TEST_ERROR);
+            else
+              mHandler.sendEmptyMessage(MSG_HDMI_TEST_OK);
         }
         else
             mHandler.sendEmptyMessage(MSG_HDMI_TEST_ERROR);
