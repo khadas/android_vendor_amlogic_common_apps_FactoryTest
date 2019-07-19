@@ -17,6 +17,7 @@
     <string name="DeviceidAddr">Deviceid Address:</string>
     <string name="TF_Test">TF</string>
     <string name="MCU_Test">MCU I2C</string>
+    <string name="GSENSOR_Test">GSENSOR I2C</string>
     <string name="SPI_Test">SPI</string>
     <string name="HDMI_Test">HDMI I2C</string>
     <string name="FUSB302_Test">FUSB302 I2C</string>

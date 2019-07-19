@@ -82,6 +82,7 @@ public class MainActivity extends Activity {
     TextView m_TextView_SPI;
     TextView m_TextView_MCU;
     TextView m_TextView_HDMI;
+    TextView m_TextView_GSENSOR;
     TextView m_TextView_FUSB302;
     TextView m_TextView_Gigabit;
     TextView m_TextView_Lan;
@@ -136,6 +137,8 @@ public class MainActivity extends Activity {
 	private final int MSG_GIGABIT_TEST_OK =  111;
 	private final int MSG_FUSB302_TEST_ERROR =  112;
 	private final int MSG_FUSB302_TEST_OK =  113;
+	private final int MSG_GSENSOR_TEST_ERROR =  114;
+	private final int MSG_GSENSOR_TEST_OK =  115;
     private final int MSG_TIME = 777;
     private static final String nullip = "0.0.0.0";
     private static final String USB_PATH = (Tools.isAndroid5_1_1()?"/storage/udisk":"/storage/external_storage/sd");
@@ -214,6 +217,7 @@ public class MainActivity extends Activity {
         m_TextView_MCU = (TextView)findViewById(R.id.TextView_MCU);
         m_TextView_SPI = (TextView)findViewById(R.id.TextView_SPI);
         m_TextView_HDMI = (TextView)findViewById(R.id.TextView_HDMI);
+        m_TextView_GSENSOR = (TextView)findViewById(R.id.TextView_GSENSOR);
         m_TextView_FUSB302 = (TextView)findViewById(R.id.TextView_FUSB302);
         m_TextView_Wifi = (TextView)findViewById(R.id.TextView_Wifi);
 		m_TextView_BT = (TextView)findViewById(R.id.TextView_BT);
@@ -310,6 +314,7 @@ public class MainActivity extends Activity {
 	test_FUSB302();
         test_RTC();
         test_MCU();
+	test_GSENSOR();
         test_HDMI();
         test_Gigabit();
         if (Build.MODEL.equals("VIM2") || Build.MODEL.equals("VIM3"))
@@ -600,6 +605,24 @@ private void updateEthandWifi(){
         }
         else
             mHandler.sendEmptyMessage(MSG_HDMI_TEST_ERROR);
+  }
+
+  private void test_GSENSOR() {
+	int num = 10;
+        String path = "/sys/class/input/";
+	String node = "";
+	for (int i =0; i< num; i++) {
+		node = path + "input" + i + "/name";
+		File file = new File(node);
+		if (!file.exists())
+			continue;
+		String value = Tools.readFile(node);
+		if (value.equals("gsensor")) {
+			 mHandler.sendEmptyMessage(MSG_GSENSOR_TEST_OK);
+			 return;
+		}
+	}
+	mHandler.sendEmptyMessage(MSG_GSENSOR_TEST_ERROR);
   }
 
   private void test_Gigabit() {
@@ -998,6 +1021,26 @@ private void updateEthandWifi(){
                     m_TextView_HDMI.setText(strTxt);
                     m_TextView_HDMI.setTextColor(0xFFFF5555);
 					Log.d(TAG,"MSG_HDMI_TEST_ERROR");
+                }
+                break;
+
+                case  MSG_GSENSOR_TEST_OK:
+                {
+                    String strTxt = getResources().getString(R.string.GSENSOR_Test) + "    " + getResources().getString(R.string.Test_Ok);
+
+                    m_TextView_GSENSOR.setText(strTxt);
+                    m_TextView_GSENSOR.setTextColor(0xFF55FF55);
+					Log.d(TAG,"MSG_GSENSOR_TEST_OK");
+                }
+                break;
+
+                case  MSG_GSENSOR_TEST_ERROR:
+                {
+                    String strTxt = getResources().getString(R.string.GSENSOR_Test) + "    " + getResources().getString(R.string.Test_Fail);
+
+                    m_TextView_GSENSOR.setText(strTxt);
+                    m_TextView_GSENSOR.setTextColor(0xFFFF5555);
+					Log.d(TAG,"MSG_GSENSOR_TEST_ERROR");
                 }
                 break;
 
