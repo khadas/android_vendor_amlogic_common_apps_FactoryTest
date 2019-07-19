@@ -567,7 +567,7 @@ private void updateEthandWifi(){
   }
 
   private void test_SPI() {
-       String val = Tools.readFile("/dev/block/env");
+       String val = Tools.readFile("/proc/cmdline");
        if (val.indexOf("spi_state=1") != -1)
           mHandler.sendEmptyMessage(MSG_SPI_TEST_OK);
        else
@@ -575,7 +575,7 @@ private void updateEthandWifi(){
   }
 
   private void test_FUSB302() {
-       String val = Tools.readFile("/dev/block/env");
+       String val = Tools.readFile("/proc/cmdline");
        if (val.indexOf("fusb302_state=1") != -1)
           mHandler.sendEmptyMessage(MSG_FUSB302_TEST_OK);
        else
