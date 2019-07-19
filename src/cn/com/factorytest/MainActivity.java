@@ -641,15 +641,37 @@ private void updateEthandWifi(){
   }
 	
   private void test_RTC() {
-
-        String node = "/sys/class/rtc/rtc0/name";
+	String content = "";
+        String node = "/sys/class/rtc/rtc0/time";
         File file = new File(node);
         if (file.exists()) {
-            String name = Tools.readFile(node);
-            if (name.equals("khadas-rtc"))
+            String val = Tools.readFile(node);
+            try {
+                FileInputStream instream = new FileInputStream(node);
+                if(instream != null)
+                {
+                    InputStreamReader inputreader = new InputStreamReader(instream);
+                    BufferedReader buffreader = new BufferedReader(inputreader);
+                    Log.d(TAG, "buffreader = " + buffreader.toString());
+                    String line;
+                    while( (line = buffreader.readLine() )  !=  null)
+                    {
+                        content = content + line;
+
+                    }
+                    instream.close();
+                 }
+              } catch(FileNotFoundException e)
+              {
+                 Log.e(TAG, "The File doesn\'t not exist.");
+                 mHandler.sendEmptyMessage(MSG_RTC_TEST_ERROR);
+              } catch(IOException e) {
+                 Log.e(TAG, " readFile error!");
+                 Log.e(TAG, e.getMessage() );
+                 mHandler.sendEmptyMessage(MSG_RTC_TEST_ERROR);
+                 return;
+              }
               mHandler.sendEmptyMessage(MSG_RTC_TEST_OK);
-            else
-              mHandler.sendEmptyMessage(MSG_RTC_TEST_ERROR);
         }
         else
             mHandler.sendEmptyMessage(MSG_RTC_TEST_ERROR);
