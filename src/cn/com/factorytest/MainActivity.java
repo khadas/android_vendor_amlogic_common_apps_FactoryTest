@@ -252,7 +252,7 @@ public class MainActivity extends Activity {
         m_mactitle = (TextView)findViewById(R.id.MacTitle);
         
         m_Button_write_mac_usid = (Button)findViewById(R.id.Button_Writemac);
-		if (Build.MODEL.equals("VIM2") || Build.MODEL.equals("VIM3")) {
+		if (Build.MODEL.equals("VIM2") || Build.MODEL.equals("VIM3") || Build.MODEL.equals("VIM3L")) {
 			if(DISABLED_WRITE_MAC) {
 				m_Button_write_mac_usid.setVisibility(View.GONE);
 			}
@@ -261,7 +261,7 @@ public class MainActivity extends Activity {
 		}
         m_Button_PowerLed = (Button)findViewById(R.id.Button_PowerLed);
         m_TextView_NetLed = (TextView)findViewById(R.id.Button_NetLed);
-        if (Build.MODEL.equals("VIM2") || Build.MODEL.equals("VIM3"))
+        if (Build.MODEL.equals("VIM2") || Build.MODEL.equals("VIM3") || Build.MODEL.equals("VIM3L"))
            m_TextView_NetLed.setText(getResources().getString(R.string.Led_white_Test));
         else {
             m_TextView_NetLed.setText(getResources().getString(R.string.Led_red_Test));
@@ -279,7 +279,7 @@ public class MainActivity extends Activity {
 		}
         
         m_Button_EnableWol = (Button)findViewById(R.id.EnableWol);
-         if (Build.MODEL.equals("VIM2") || Build.MODEL.equals("VIM3")) {
+         if (Build.MODEL.equals("VIM2") || Build.MODEL.equals("VIM3") || Build.MODEL.equals("VIM3L")) {
                 m_TextView_SPI.setVisibility(View.VISIBLE);
 		m_TextView_Gigabit.setVisibility(View.VISIBLE);
         }
@@ -299,7 +299,7 @@ public class MainActivity extends Activity {
                 test_Thread();
             }
         }.start();
-        if (Build.MODEL.equals("VIM3")) {
+        if (Build.MODEL.equals("VIM3") || Build.MODEL.equals("VIM3L")) {
             new Thread() {
                 public void run() {
                     while (true) {
@@ -326,13 +326,13 @@ public class MainActivity extends Activity {
         test_BT();
         test_RTC();
         test_MCU();
-        if (Build.MODEL.equals("VIM3")) {
+        if (Build.MODEL.equals("VIM3") || Build.MODEL.equals("VIM3L")) {
             test_FUSB302();
             test_GSENSOR();
         }
         test_HDMI();
         test_Gigabit();
-        if (Build.MODEL.equals("VIM2") || Build.MODEL.equals("VIM3"))
+        if (Build.MODEL.equals("VIM2") || Build.MODEL.equals("VIM3") || Build.MODEL.equals("VIM3L"))
             test_SPI();
         boolean bWifiOk = false;
 
