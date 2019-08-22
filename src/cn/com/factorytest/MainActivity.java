@@ -599,7 +599,7 @@ private void updateEthandWifi(){
     
   private void test_MCU() {
 
-        File file = new File("/sys/class/wol/enable");
+        File file = new File("/sys/class/mcu/rst");
         if (file.exists())
             mHandler.sendEmptyMessage(MSG_MCU_TEST_OK);
         else
