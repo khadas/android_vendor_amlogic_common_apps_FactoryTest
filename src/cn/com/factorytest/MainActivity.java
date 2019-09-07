@@ -228,10 +228,7 @@ public class MainActivity extends Activity {
 
 		if(DISABLED_USB2) {
 			m_TextView_USB2.setVisibility(View.GONE);
-		}else{
-            if (Build.MODEL.equals("VIM1"))
-                m_TextView_USB2.setVisibility(View.GONE);
-        }
+		}
 
 		if(DISABLED_DEVICE_ID) {
 			m_device_id.setVisibility(View.GONE);
@@ -795,7 +792,7 @@ private void updateEthandWifi(){
 		int length;
 		String[] list = val.split("T:|B:|D:|P:|S:|C:|I:|E:");
 		int num = -1;
-		int count = getSubCount(val, "(I)");
+		int count = getSubCount(val, "Bus=");
 		String[] tmp = new String[count];
 		for (int z=0; z< list.length; z++) {
 
@@ -810,16 +807,20 @@ private void updateEthandWifi(){
 		}
 		for (int i=0; i< tmp.length; i++) {
             if (Build.MODEL.equals("VIM1")) {
-                if ((tmp[i].indexOf("(O)") != -1) && (tmp[i].indexOf("Bus=01") != -1) && ((tmp[i].indexOf("Port=02") != -1 || tmp[i].indexOf("Port=03") != -1))) {
-                    Log.d("TAG", "USB2.0 is OK");
+                if ((tmp[i].indexOf("(O)") != -1) && (tmp[i].indexOf("Bus=01") != -1) && (tmp[i].indexOf("Port=02") != -1)) {
+                    Log.d("TAG", "USB2.0 port 1 is OK");
                     mHandler.sendEmptyMessage(MSG_USB1_TEST_XL_OK);
+                }
+                if ((tmp[i].indexOf("(O)") != -1) && (tmp[i].indexOf("Bus=01") != -1) && (tmp[i].indexOf("Port=01") != -1)) {
+                    Log.d("TAG", "USB2.0 port 2 is OK");
+                    mHandler.sendEmptyMessage(MSG_USB2_TEST_XL_OK);
                 }
             }else{
                 if ((tmp[i].indexOf("(O)") != -1) && (tmp[i].indexOf("Bus=02") != -1)) {
                     Log.d(TAG, "USB3.0 is OK");
                     mHandler.sendEmptyMessage(MSG_USB2_TEST_XL_OK);
                 }
-                if ((tmp[i].indexOf("(O)") != -1) && (tmp[i].indexOf("Bus=01") != -1) && (tmp[i].indexOf("Port=01") != -1)) {
+                if ((tmp[i].indexOf("(O)") != -1) && (tmp[i].indexOf("Bus=01") != -1)) {
                     Log.d("TAG", "USB2.0 is OK");
                     mHandler.sendEmptyMessage(MSG_USB1_TEST_XL_OK);
                 }
@@ -1260,16 +1261,28 @@ private void updateEthandWifi(){
 				break;
 				
 				case MSG_USB1_TEST_XL_ERROR: {
-				String strTxt = getResources().getString(R.string.USB1_Test)
+				String strTxt = "";
+		 		if (Build.MODEL.equals("VIM1")) {
+					strTxt = getResources().getString(R.string.USB1_Test_Other)
 						+ "    " + getResources().getString(R.string.Test_Fail);
+				} else {
+					strTxt = getResources().getString(R.string.USB1_Test)
+						+ "    " + getResources().getString(R.string.Test_Fail);
+				}
 				m_TextView_USB1.setText(strTxt);
 				m_TextView_USB1.setTextColor(0xFFFF5555);
 				}
 				break;
 
 			case MSG_USB1_TEST_XL_OK: {
-				String strTxt = getResources().getString(R.string.USB1_Test)
+				String strTxt = "";
+		 		if (Build.MODEL.equals("VIM1")) {
+					strTxt = getResources().getString(R.string.USB1_Test_Other)
 						+ "    " + getResources().getString(R.string.Test_Ok);
+				} else {
+					strTxt = getResources().getString(R.string.USB1_Test)
+						+ "    " + getResources().getString(R.string.Test_Ok);
+				}
 				m_TextView_USB1.setText(strTxt);
 				m_TextView_USB1.setTextColor(0xFF55FF55);
 				}
@@ -1277,7 +1290,12 @@ private void updateEthandWifi(){
 				
 			case  MSG_USB2_TEST_XL_ERROR:
             {
-                String strTxt = getResources().getString(R.string.USB2_Test) + "    " + getResources().getString(R.string.Test_Fail);
+		String strTxt = "";
+		if (Build.MODEL.equals("VIM1")) {
+	                strTxt = getResources().getString(R.string.USB2_Test_Other) + "    " + getResources().getString(R.string.Test_Fail);
+		} else {
+	                strTxt = getResources().getString(R.string.USB2_Test) + "    " + getResources().getString(R.string.Test_Fail);
+		}
                 m_TextView_USB2.setText(strTxt);
                 m_TextView_USB2.setTextColor(0xFFFF5555);
             }
@@ -1285,7 +1303,12 @@ private void updateEthandWifi(){
 
             case  MSG_USB2_TEST_XL_OK:
             {
-                String strTxt = getResources().getString(R.string.USB2_Test) + "    " + getResources().getString(R.string.Test_Ok);
+		String strTxt = "";
+		 if (Build.MODEL.equals("VIM1")) {
+                     strTxt = getResources().getString(R.string.USB2_Test_Other) + "    " + getResources().getString(R.string.Test_Ok);
+                 } else {
+                     strTxt = getResources().getString(R.string.USB2_Test) + "    " + getResources().getString(R.string.Test_Ok);
+                 }
                 m_TextView_USB2.setText(strTxt);
                 m_TextView_USB2.setTextColor(0xFF55FF55);
             }

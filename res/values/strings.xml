@@ -24,6 +24,8 @@
     <string name="RstMcu">复位MCU</string>
     <string name="USB1_Test">USB2.0</string>
     <string name="USB2_Test">USB3.0</string>
+    <string name="USB1_Test_Other">USB1</string>
+    <string name="USB2_Test_Other">USB2</string>
     <string name="Gigabit_Test">Gigabit Test</string>
     <string name="Test_Fail">fail</string>
     <string name="Test_Ok">pass</string>
