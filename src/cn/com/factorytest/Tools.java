@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.InputStream;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -112,6 +113,28 @@ public class Tools {
 		{
 			Log.e(TAG, e.toString() );
 		}
+    }
+
+    public static String getMac()
+    {
+		String line = "";
+
+		String cmd ="getbootenv ubootenv.var.factory_mac";
+		try {
+		Process p = Runtime.getRuntime().exec(cmd);
+		InputStream is = p.getInputStream();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		line = reader.readLine();
+		p.waitFor();
+		is.close();
+		reader.close();
+		p.destroy();
+		} catch (IOException e) {  
+			throw new RuntimeException(e); 
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+	return line;
     }
 
     public static boolean isEthUp()

@@ -12,6 +12,13 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.view.View;
+import java.io.BufferedWriter;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.InputStream;
 
 public class WriteMacActivity extends Activity {
 	private static final String TAG = "FactoryTest";
@@ -63,11 +70,6 @@ public class WriteMacActivity extends Activity {
     {
     	int nTextlen = m_EditMac.getText().toString().length();
 
-
-    	if(getResources().getInteger(R.integer.config_mac_length) == nTextlen)
-    	{
-			OnWriteMac(false);
-    	}
     	if(getResources().getInteger(R.integer.config_mac_length2) == nTextlen)
     	{
 			OnWriteMac(true);
@@ -168,6 +170,7 @@ public class WriteMacActivity extends Activity {
 	public void WriteMac(String strMac)
 	{	
 
+
 		if (getResources().getBoolean(R.bool.config_write_mac_in_otp)) {
 			if (strMac.length() == 17) {
 				if((':' == strMac.charAt(2) ) && (':' == strMac.charAt(5) ) && (':' == strMac.charAt(8) ) && (':' == strMac.charAt(11) ) && (':' == strMac.charAt(14) ) ) {
@@ -200,7 +203,14 @@ public class WriteMacActivity extends Activity {
 					}
 					Log.d(TAG,"MAC ="+ mac + " format_err= "+format_err);
 					if (!format_err) {
-						Tools.writeFile(Tools.Key_OTP_Mac, mac);
+
+						String cmd = String.format("setbootenv ubootenv.var.factory_mac %s", strMac);
+						try {
+							Process exeCmd = Runtime.getRuntime().exec(cmd);
+							exeCmd.getOutputStream().flush();
+						} catch (IOException e) {
+							Log.e(TAG, "Excute exception: " + e.getMessage());
+						}
 					}
 				}
 			}
@@ -269,40 +279,32 @@ public class WriteMacActivity extends Activity {
 	
 	public void ShowMac()
 	{	
-		Tools.writeFile(Tools.Key_Name, Tools.Key_Mac);
-		String strMac =  Tools.readFile(Tools.Key_Read);
-		
-		Log.e(TAG, "strMac : " + strMac  + ";  length    : " + strMac.length() );				
-		m_MacAddr.setText(CHexConver.hexStr2Str(strMac) );
+
 	}
 
 	public void ShowMac_OTP()
 	{
-		String strTmpMac = "";
-		String endMac = "";
-		String strMac = Tools.readFile(Tools.Key_OTP_Mac);
-		Log.e(TAG, "strMac : " + strMac  + ";  length    : " + strMac.length() );
-
-		char[] mac = new char[12];
-		int length = strMac.length();
-		if (length != 42) {
-			m_MacAddr.setTextColor(Color.RED);
-			m_MacAddr.setText("ERR");
-
-		} else {
-			strTmpMac = strMac.substring(6);
-			length = strTmpMac.length();
-			strTmpMac = strTmpMac.substring(0,length-1);
-			Log.e(TAG, "===strTmpMac : " + strTmpMac);
-			strTmpMac = CHexConver.hexStr2Str(strTmpMac);
-			length = strTmpMac.length();
-			for(int i = 0; i < length; i += 2)
-			{
-				endMac += strTmpMac.substring(i, (i + 2) < length ? (i + 2) :  length );
-				if( (i + 2) < length) endMac += ':';
-			}
-				m_MacAddr.setText(""+endMac);
+		String cmd ="getbootenv ubootenv.var.factory_mac";
+		try {
+		Process p = Runtime.getRuntime().exec(cmd);
+		InputStream is = p.getInputStream();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		String line;
+		line = reader.readLine();
+		if (line != null) {
+			m_MacAddr.setText(line);
+			Log.e(TAG, "strMac : " + line  + ";  length    : " + line.length() );
 		}
+		p.waitFor();
+		is.close();
+		reader.close();
+		p.destroy();
+		} catch (IOException e) {  
+			throw new RuntimeException(e); 
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+
 	}
 	
 	public void ShowSn()
@@ -372,7 +374,7 @@ public class WriteMacActivity extends Activity {
 		}
 
 		if (getResources().getBoolean(R.bool.config_write_mac_in_otp)) {
-			String str_mac = Tools.readFile(Tools.Key_OTP_Mac);
+			//String str_mac = Tools.readFile(Tools.Key_OTP_Mac);
 			ShowMac_OTP();
 
 		} else {

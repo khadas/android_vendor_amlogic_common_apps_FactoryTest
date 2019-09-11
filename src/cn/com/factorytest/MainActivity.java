@@ -451,24 +451,19 @@ private void updateEthandWifi(){
         mountfilter.addDataScheme("file");
         registerReceiver(mountReceiver, mountfilter);
         
-		String strMac = Tools.readFile(Tools.Key_OTP_Mac);
-		int length = strMac.length();
-		if (length != 42) {
+		String strMac = Tools.getMac();
+		if (strMac != null) {
+			int length = strMac.length();
+			if (length != 17) {
+				m_macvalue.setTextColor(Color.RED);
+				m_macvalue.setText("ERR");
+			} else {
+				m_macvalue.setTextColor(Color.RED);
+				m_macvalue.setText(strMac+" ");
+			}
+		} else {
 			m_macvalue.setTextColor(Color.RED);
 			m_macvalue.setText("ERR");
-		} else {
-			String strTmpMac = strMac.substring(6);
-			length = strTmpMac.length();
-			strTmpMac = strTmpMac.substring(0,length-1);
-			strMac = CHexConver.hexStr2Str(strTmpMac);
-			length = strMac.length();
-			String Mac = "";
-			for(int i = 0; i < length; i += 2) {
-				Mac += strMac.substring(i, (i + 2) < length ? (i + 2) :  length );
-				if( (i + 2) < length) Mac += ':';
-			}
-			m_macvalue.setTextColor(Color.RED);
-			m_macvalue.setText(Mac+" ");
 		}
         m_maccheck.requestFocus();
        
