@@ -806,7 +806,7 @@ private void updateEthandWifi(){
                     Log.d("TAG", "USB2.0 port 1 is OK");
                     mHandler.sendEmptyMessage(MSG_USB1_TEST_XL_OK);
                 }
-                if ((tmp[i].indexOf("(O)") != -1) && (tmp[i].indexOf("Bus=01") != -1) && (tmp[i].indexOf("Port=01") != -1)) {
+                if ((tmp[i].indexOf("(O)") != -1) && (tmp[i].indexOf("Bus=01") != -1) && (tmp[i].indexOf("Port=03") != -1)) {
                     Log.d("TAG", "USB2.0 port 2 is OK");
                     mHandler.sendEmptyMessage(MSG_USB2_TEST_XL_OK);
                 }
