@@ -50,6 +50,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Enumeration;
+import java.net.*;
 
 public class MainActivity extends Activity {
 
@@ -935,24 +937,41 @@ private void updateEthandWifi(){
         return false;
     }
 
+   private boolean hasEthIpAddress() {
+
+	try {
+		for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+			NetworkInterface intf = en.nextElement();
+			if (intf.getName().toLowerCase().equals("eth0")) {
+				for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+					InetAddress inetAddress = enumIpAddr.nextElement();
+					if (!inetAddress.isLoopbackAddress()) {
+						String ipaddress = inetAddress.getHostAddress().toString();
+						if(!ipaddress.contains("::")){
+							return true;
+						}
+					}
+				}
+
+			} else {
+				continue;
+			}
+		}
+
+	} catch (SocketException ex) {
+		Log.e(TAG, ex.toString());
+	}
+	return false;
+
+   }
 
     private void test_ETH()
     {
-		boolean isEthConnected = NetworkUtils.isEthConnected(this);
-        if(Tools.isEthUp())
-        {
-            mHandler.sendEmptyMessage(MSG_LAN_TEST_OK);
-        }
-        else
-        {
-			if(isEthConnected) {
-              mHandler.sendEmptyMessage(MSG_LAN_TEST_OK);
-			}else {
-            mHandler.sendEmptyMessage(MSG_LAN_TEST_ERROR);
-			}
-        }
-
-		Log.d(TAG,"ETH state: "+Tools.isEthUp());
+	if (hasEthIpAddress()) {
+		mHandler.sendEmptyMessage(MSG_LAN_TEST_OK);
+	} else {
+		mHandler.sendEmptyMessage(MSG_LAN_TEST_ERROR);
+	}
     }
 
     class FactoryHandler extends Handler {
@@ -1377,11 +1396,9 @@ private void updateEthandWifi(){
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if(action.equals(ConnectivityManager.CONNECTIVITY_ACTION)){
-                if(Tools.isNetworkAvailable(context)){
-				   if(Tools.isEthUp()) {	
-                    mHandler.sendEmptyMessage(MSG_LAN_TEST_OK);
-				    }
-                }
+		if (hasEthIpAddress()) {
+			mHandler.sendEmptyMessage(MSG_LAN_TEST_OK);
+		 }
                 updateEthandWifi();
             }else if(action.equals(Intent.ACTION_TIME_TICK) || action.equals(Intent.ACTION_TIME_CHANGED)){
                 updateTime();
