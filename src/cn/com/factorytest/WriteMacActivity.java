@@ -284,27 +284,8 @@ public class WriteMacActivity extends Activity {
 
 	public void ShowMac_OTP()
 	{
-		String cmd ="getbootenv ubootenv.var.factory_mac";
-		try {
-		Process p = Runtime.getRuntime().exec(cmd);
-		InputStream is = p.getInputStream();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-		String line;
-		line = reader.readLine();
-		if (line != null) {
-			m_MacAddr.setText(line);
-			Log.e(TAG, "strMac : " + line  + ";  length    : " + line.length() );
-		}
-		p.waitFor();
-		is.close();
-		reader.close();
-		p.destroy();
-		} catch (IOException e) {  
-			throw new RuntimeException(e); 
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
-		}
-
+		String mac = Tools.getMac();
+		m_MacAddr.setText(mac);
 	}
 	
 	public void ShowSn()

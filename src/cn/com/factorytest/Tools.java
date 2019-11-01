@@ -117,24 +117,72 @@ public class Tools {
 
     public static String getMac()
     {
-		String line = "";
 
-		String cmd ="getbootenv ubootenv.var.factory_mac";
-		try {
-		Process p = Runtime.getRuntime().exec(cmd);
-		InputStream is = p.getInputStream();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-		line = reader.readLine();
-		p.waitFor();
-		is.close();
-		reader.close();
-		p.destroy();
-		} catch (IOException e) {  
-			throw new RuntimeException(e); 
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
+	String mac = "";
+	String val = Tools.readFile("/proc/cmdline");
+	int length = val.length();
+	int index = val.indexOf("factory_mac=");
+	Log.d("yangjinqing", "length="+length+ " index="+index);
+	if (index != -1) {
+		if (length > (index+12+17)) {
+			mac = val.substring(index+12, index+12+17);
+			Log.d("yangjinqing", "mac ="+mac);
+			if((':' == mac.charAt(2) ) && (':' == mac.charAt(5) ) && (':' == mac.charAt(8) ) && (':' == mac.charAt(11) ) && (':' == mac.charAt(14))) {
+					String strMac = mac.replaceAll(":","");
+					int len = strMac.length();
+					boolean format_err = true;
+					for (int i=0; i< len; i++) {
+						int value = (int)strMac.charAt(i);
+						if(((value > 0x2f) && (value < 0x3a)) || ((value > 0x40) && (value < 0x47)) || ((value > 0x60) && (value < 0x67))) {
+							if (i == 1) {
+								if (value > 0x2f && value < 0x3a) {
+									if (value%2 == 1) {
+										format_err = true;
+										break;
+									}
+								} else {
+									if (value%2 == 0) {
+										format_err = true;
+										break;
+									}
+								}
+							}
+							format_err = false;
+						} else {
+							format_err = true;
+							break;
+						}
+
+					}
+					if (!format_err) {
+						return mac;
+					} else {
+						return "";
+					}
+			} else {
+				
+				String line = "";
+
+				String cmd ="getbootenv ubootenv.var.factory_mac";
+				try {
+				Process p = Runtime.getRuntime().exec(cmd);
+				InputStream is = p.getInputStream();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+				line = reader.readLine();
+				p.waitFor();
+				is.close();
+				reader.close();
+				p.destroy();
+				} catch (IOException e) {  
+				throw new RuntimeException(e); 
+				} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+				}
+				return line;
+			}
 		}
-	return line;
+	}
+	return mac;
     }
 
     public static boolean isEthUp()
