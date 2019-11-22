@@ -61,6 +61,7 @@ public class Tools {
 	public static  final String White_Led = "/sys/class/leds/sys_led/trigger";
     public static  final String Ethernet_status = "/sys/class/net/eth0/operstate";
 	public static  final String Rtc_time = "/sys/class/rtc/rtc0/time";
+	private static boolean mEfuseFlag = false;
 
 	public static String readFile(String file)
     {
@@ -115,6 +116,12 @@ public class Tools {
 		}
     }
 
+
+    public static boolean isMacFromEfuse()
+    {
+        return mEfuseFlag;
+    }
+
     public static String getMac()
     {
 
@@ -155,6 +162,7 @@ public class Tools {
 
 					}
 					if (!format_err) {
+						mEfuseFlag = true;
 						return mac;
 					} else {
 						return "";

@@ -81,6 +81,7 @@ public class MainActivity extends Activity {
     TextView m_TextView_USB1;
     TextView m_TextView_USB2;
 
+    TextView m_TextView_MacLabel;
     TextView m_TextView_SPI;
     TextView m_TextView_MCU;
     TextView m_TextView_HDMI;
@@ -214,6 +215,7 @@ public class MainActivity extends Activity {
         m_TextView_USB1 = (TextView)findViewById(R.id.TextView_USB1);
         m_TextView_USB2 = (TextView)findViewById(R.id.TextView_USB2);
 
+        m_TextView_MacLabel = (TextView)findViewById(R.id.mac_label);
         m_TextView_Gigabit = (TextView)findViewById(R.id.TextView_Gigabit);
         m_TextView_Lan = (TextView)findViewById(R.id.TextView_Lan);
         m_TextView_MCU = (TextView)findViewById(R.id.TextView_MCU);
@@ -462,6 +464,9 @@ private void updateEthandWifi(){
 			} else {
 				m_macvalue.setTextColor(Color.RED);
 				m_macvalue.setText(strMac+" ");
+				if (Tools.isMacFromEfuse()) {
+					m_TextView_MacLabel.setTextColor(Color.GREEN);
+				}
 			}
 		} else {
 			m_macvalue.setTextColor(Color.RED);
