@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.content.Context;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.InputType;
@@ -22,6 +23,7 @@ import java.io.InputStream;
 
 public class WriteMacActivity extends Activity {
 	private static final String TAG = "FactoryTest";
+	private Context mContext;
 	
 	EditText m_EditMac;
 	TextView m_MacAddr;
@@ -205,6 +207,7 @@ public class WriteMacActivity extends Activity {
 					if (!format_err) {
 
 						String cmd = String.format("setbootenv ubootenv.var.factory_mac %s", strMac);
+						Tools.setSharedPreference(mContext, strMac);
 						try {
 							Process exeCmd = Runtime.getRuntime().exec(cmd);
 							exeCmd.getOutputStream().flush();
@@ -319,6 +322,7 @@ public class WriteMacActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.write_mac);
+		mContext= this;
 
 		m_EditMac = (EditText)findViewById(R.id.EditTextMac);		
 		m_EditMac.setInputType(InputType.TYPE_NULL);

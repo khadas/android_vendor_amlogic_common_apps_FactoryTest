@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
+import java.io.IOException;
 
 public class FactoryReceiver extends BroadcastReceiver{
 	private static final String TAG = Tools.TAG;
@@ -25,7 +26,25 @@ public class FactoryReceiver extends BroadcastReceiver{
 	public void onReceive(Context context, Intent intent) {
 		// TODO Auto-generated method stub
 		String action = intent.getAction();
+           if (action.equals(Intent.ACTION_BOOT_COMPLETED)) {
+                String mac = Tools.getMac();
+                if (mac.equals("00:00:00:00:00:00")) {
+                   mac = Tools.getSharedPreference(context);
+                   if (!mac.equals("00:00:00:00:00:00")) {
+                       String cmd = String.format("setbootenv ubootenv.var.factory_mac %s", mac);
+                       try {
+                           Process exeCmd = Runtime.getRuntime().exec(cmd);
+                       } catch (IOException e) {
+                           Log.e(TAG, "Excute exception: " + e.getMessage());
+                       }
+                   }
+                }
+                Log.d(TAG, "Factory action="+action);
+		return;
+            }
+            Log.d(TAG, "Factory action="+action);
 		Uri uri = intent.getData();
+
 		if (uri.getScheme().equals("file")) {
 			String path = uri.getPath();
             String externalStoragePath = Environment.getExternalStorageDirectory().getPath();

@@ -1,5 +1,6 @@
 package cn.com.factorytest;
 
+import android.app.Activity;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.InputStream;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -276,6 +278,21 @@ public class Tools {
 //        mTotal = Integer.parseInt(MemTotal)+Integer.parseInt(Cached);
         mTotal = Integer.parseInt(MemTotal);
         return mTotal;
+    }
+
+    public static void setSharedPreference(Context context, String mac) {
+         final SharedPreferences sharedPreferences = context.getSharedPreferences("factory",Activity.MODE_PRIVATE);
+         SharedPreferences.Editor editor = sharedPreferences.edit();
+         editor.putString("mac", mac);
+         editor.commit();
+         Log.d("FactoryTest", "setSharedPreference mac="+mac);
+    }
+
+    public static String getSharedPreference(Context context) {
+         final SharedPreferences sharedPreferences = context.getSharedPreferences("factory",Activity.MODE_PRIVATE);
+         String value = sharedPreferences.getString("mac", "00:00:00:00:00:00");
+         Log.d("FactoryTest", "getSharedPreference mac="+value);
+         return value;
     }
     
     public static String getRomSize(Context cnt){
