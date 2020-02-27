@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.InputType;
@@ -114,6 +115,8 @@ public class WriteMacActivity extends Activity {
 				
 		m_EditMac.setText("");
 		m_EditMac.requestFocus();
+		Intent intent = new Intent(this, MainActivity.class);
+		startActivity(intent);
 	}
 	
 	public void OnWriteSn()
