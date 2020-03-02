@@ -64,6 +64,7 @@ public class Tools {
     public static  final String Ethernet_status = "/sys/class/net/eth0/operstate";
 	public static  final String Rtc_time = "/sys/class/rtc/rtc0/time";
 	private static boolean mEfuseFlag = false;
+	public static  final String ageing_status = "/sys/class/mcu/ageing_test";  
 
 	public static String readFile(String file)
     {
