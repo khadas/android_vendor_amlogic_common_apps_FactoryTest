@@ -312,7 +312,7 @@ public class MainActivity extends Activity {
                 test_Thread();
             }
         }.start();
-        if (Build.MODEL.equals("VIM3") || Build.MODEL.equals("VIM3L")) {
+        if (Build.MODEL.equals("VIM3") || Build.MODEL.equals("VIM3L") || Build.MODEL.equals("VIM1")) {
             new Thread() {
                 public void run() {
                     while (true) {
