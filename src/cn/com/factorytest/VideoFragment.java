@@ -98,7 +98,7 @@ public class VideoFragment extends Fragment implements MediaPlayer.OnCompletionL
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case MSG_UPDATE_TIME:
-					if(1 == FactoryReceiver.ageing_flag){
+					if(1 == MainActivity.ageing_flag){
 						if(2 == ageing_test_step && 2 != led_status){
 							Tools.writeFile(Tools.White_Led,"heartbeat");//default-on off heartbeat
 							led_status = 2;
@@ -131,8 +131,8 @@ public class VideoFragment extends Fragment implements MediaPlayer.OnCompletionL
         long minute1 = between % 3600 / 60;
         long second1 = between % 60;
 		
-		if(1 == FactoryReceiver.ageing_flag){
-			if((hour_ageing >= FactoryReceiver.ageing_time) && 1 == ageing_test_step){
+		if(1 == MainActivity.ageing_flag){
+			if((hour_ageing >= MainActivity.ageing_time) && 1 == ageing_test_step){
 				Tools.writeFile(Tools.ageing_status,"1");
 				ageing_test_step = 2;
 			}

@@ -193,6 +193,8 @@ public class MainActivity extends Activity {
 	private int BT_try_count = 2;
 	private int btLevel = 0;
 	private final String BTSSID="Khadas";
+	public static int ageing_flag = 0;
+	public static int ageing_time = 0;
 
     
     
@@ -201,6 +203,13 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 		mContext = this;
+	Bundle bundle = new Bundle();
+	bundle = getIntent().getExtras();
+	if (bundle != null) {
+		ageing_flag = bundle.getInt("ageing_flag");
+		ageing_time = bundle.getInt("ageing_time");
+	}
+	Log.d(TAG, "ageing_flag ="+ageing_flag+" ageing_time="+ageing_time);
         mAudioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);    
         //最大音量    
         maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);    
@@ -317,7 +326,7 @@ public class MainActivity extends Activity {
                 public void run() {
                     while (true) {
                         try {
-							if(0 == FactoryReceiver.ageing_flag){
+							if(0 == ageing_flag){
 	                            Tools.writeFile(Tools.Red_Led, "2");
 	                            Tools.writeFile(Tools.White_Led, "default-on");
 	                            Thread.sleep(1000);
@@ -682,7 +691,7 @@ private void updateEthandWifi(){
 		e.printStackTrace();
 	}
 	ageing_test_ok_flag = false;
-	if(0 == FactoryReceiver.ageing_flag)
+	if(0 == ageing_flag)
 		m_TextView_AGEING.setVisibility(View.GONE);
 	else
 		mHandler.sendEmptyMessage(MSG_AGEING_TEST_ERROR);
