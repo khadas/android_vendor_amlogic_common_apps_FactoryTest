@@ -263,7 +263,7 @@ public class MainActivity extends Activity {
 			m_snvalue.setVisibility(View.GONE);
 		}
 
-        if (Build.MODEL.equals("VIM1")) {
+        if (Build.MODEL.equals("VIM1") || Build.MODEL.equals("VIM2")) {
             m_TextView_GSENSOR.setVisibility(View.GONE);
             m_TextView_FUSB302.setVisibility(View.GONE);
         }
@@ -321,7 +321,7 @@ public class MainActivity extends Activity {
                 test_Thread();
             }
         }.start();
-        if (Build.MODEL.equals("VIM3") || Build.MODEL.equals("VIM3L") || Build.MODEL.equals("VIM1")) {
+        //if (Build.MODEL.equals("VIM3") || Build.MODEL.equals("VIM3L") || Build.MODEL.equals("VIM1")) {
             new Thread() {
                 public void run() {
                     while (true) {
@@ -350,7 +350,7 @@ public class MainActivity extends Activity {
                     }
                 }
             }.start();
-        }
+       // }
     }
  
     public void test_Thread() {
@@ -468,10 +468,6 @@ private void updateEthandWifi(){
         m_nand_size.setText(Tools.getRomSize(this));
         m_firmware_version.setText(Build.VERSION.INCREMENTAL);
         m_device_type.setText(Build.MODEL);
-        if (Build.MODEL.equals("VIM2")) {
-           m_device_type.setText(get_VIM2_hwv());
- 
-        }
         
         updateEthandWifi();
         
@@ -605,14 +601,6 @@ private void updateEthandWifi(){
        mHandler.sendEmptyMessage(MSG_BT_TEST_ERROR);
 	  }
    }
-
-  private String get_VIM2_hwv() {
-       String val = Tools.readFile("/dev/block/env");
-       if (val.indexOf("VIM2.V13") != -1)
-          return "VIM2.V13";
-       else
-          return "VIM2.V12";
-  }
 
   private void test_SPI() {
        String val = Tools.readFile("/proc/cmdline");
@@ -874,7 +862,7 @@ private void updateEthandWifi(){
 			tmp[num] = tmp[num] + list[z];
 		}
 		for (int i=0; i< tmp.length; i++) {
-            if (Build.MODEL.equals("VIM1")) {
+            if (Build.MODEL.equals("VIM1") || Build.MODEL.equals("VIM2")) {
                 if ((tmp[i].indexOf("(O)") != -1) && (tmp[i].indexOf("Bus=01") != -1) && (tmp[i].indexOf("Port=02") != -1)) {
                     Log.d("TAG", "USB2.0 port 1 is OK");
                     mHandler.sendEmptyMessage(MSG_USB1_TEST_XL_OK);
@@ -1367,7 +1355,7 @@ private void updateEthandWifi(){
 				
 				case MSG_USB1_TEST_XL_ERROR: {
 				String strTxt = "";
-		 		if (Build.MODEL.equals("VIM1")) {
+				if (Build.MODEL.equals("VIM1") || Build.MODEL.equals("VIM2")) {
 					strTxt = getResources().getString(R.string.USB1_Test_Other)
 						+ "    " + getResources().getString(R.string.Test_Fail);
 				} else {
@@ -1381,7 +1369,7 @@ private void updateEthandWifi(){
 
 			case MSG_USB1_TEST_XL_OK: {
 				String strTxt = "";
-		 		if (Build.MODEL.equals("VIM1")) {
+				if (Build.MODEL.equals("VIM1") || Build.MODEL.equals("VIM2")) {
 					strTxt = getResources().getString(R.string.USB1_Test_Other)
 						+ "    " + getResources().getString(R.string.Test_Ok);
 				} else {
@@ -1396,7 +1384,7 @@ private void updateEthandWifi(){
 			case  MSG_USB2_TEST_XL_ERROR:
             {
 		String strTxt = "";
-		if (Build.MODEL.equals("VIM1")) {
+		if (Build.MODEL.equals("VIM1") || Build.MODEL.equals("VIM2")) {
 	                strTxt = getResources().getString(R.string.USB2_Test_Other) + "    " + getResources().getString(R.string.Test_Fail);
 		} else {
 	                strTxt = getResources().getString(R.string.USB2_Test) + "    " + getResources().getString(R.string.Test_Fail);
@@ -1409,7 +1397,7 @@ private void updateEthandWifi(){
             case  MSG_USB2_TEST_XL_OK:
             {
 		String strTxt = "";
-		 if (Build.MODEL.equals("VIM1")) {
+		 if (Build.MODEL.equals("VIM1") || Build.MODEL.equals("VIM2")) {
                      strTxt = getResources().getString(R.string.USB2_Test_Other) + "    " + getResources().getString(R.string.Test_Ok);
                  } else {
                      strTxt = getResources().getString(R.string.USB2_Test) + "    " + getResources().getString(R.string.Test_Ok);
