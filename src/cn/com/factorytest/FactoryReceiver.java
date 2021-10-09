@@ -189,12 +189,15 @@ public class FactoryReceiver extends BroadcastReceiver{
 					Log.d(TAG, "ageing_cpu_max="+MainActivity.ageing_cpu_max);
 					//power_led_test
 					MainActivity.power_led_test = rec.contains("power_led_test=1");
+					MainActivity.power_led_test = false;//remove power_led_test
 					//irkey_test
 					MainActivity.irkey_test = rec.contains("irkey_test=1");
 					//wol_enable
 					MainActivity.wol_enable = rec.contains("wol_enable=1");
 					//mic_test
 					MainActivity.mic_test = rec.contains("mic_test=1");
+					//mipi_camera_test
+					MainActivity.mipi_camera_test = rec.contains("mipi_camera_test=1");
 					//board_key_test
 					MainActivity.board_key_test = rec.contains("board_key_test=1");
 					//reset_mcu

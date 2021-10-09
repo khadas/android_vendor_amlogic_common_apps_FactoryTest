@@ -230,17 +230,6 @@
                     android:textSize="18sp"></Button>
 
                 <Button
-                    android:id="@+id/EnableWol"
-                    android:layout_width="200dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:onClick="EnableWol"
-                    android:paddingLeft="20dp"
-                    android:text="@string/EnableWol"
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp"></Button>
-
-                <Button
                     android:id="@+id/speaker_MIC"
                     android:layout_width="200dp"
                     android:layout_height="match_parent"
@@ -252,6 +241,17 @@
                     android:textSize="18sp"></Button>
 
                 <Button
+                    android:id="@+id/Mipi_Camera"
+                    android:layout_width="200dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="Mipi_Camera"
+                    android:paddingLeft="20dp"
+                    android:text="@string/Mipi_Camera"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"></Button>
+
+                <Button
                     android:id="@+id/KeyTest"
                     android:layout_width="200dp"
                     android:layout_height="match_parent"
@@ -259,6 +259,17 @@
                     android:onClick="KeyTest"
                     android:paddingLeft="20dp"
                     android:text="@string/KeyTest"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"></Button>
+
+                <Button
+                    android:id="@+id/EnableWol"
+                    android:layout_width="200dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="EnableWol"
+                    android:paddingLeft="20dp"
+                    android:text="@string/EnableWol"
                     android:textColor="@android:color/white"
                     android:textSize="18sp"></Button>
 
@@ -290,15 +301,27 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="vertical">
+	    android:layout_marginTop="30dp"
+            android:layout_marginRight="0dp"
+            android:orientation="horizontal">
 
             <fragment
                 android:id="@+id/fragment_video"
+                android:layout_weight="1"
                 android:name="cn.com.factorytest.VideoFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom" />
+                android:layout_gravity="center_horizontal|top" />
+
+            <SurfaceView
+                android:id="@+id/mSurfaceView_mipi"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|top" />
+
         </LinearLayout>
+
     </LinearLayout>
 
 

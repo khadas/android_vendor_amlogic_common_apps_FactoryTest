@@ -19,6 +19,7 @@ import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.provider.Settings;
 
 import cn.com.factorytest.helper.ControlButtonUtil;
 import cn.com.factorytest.helper.Recorder;
@@ -27,7 +28,7 @@ import cn.com.factorytest.helper.VUMeter;
 public class PhoneMicTestActivity extends Activity implements OnClickListener{
 	private static final String TAG = PhoneMicTestActivity.class
 			.getSimpleName();
-	
+
 	private final static String ERRMSG = "Record error";
 	private final static int RECORD_TIME = 5;
 	private static final int MSG_TEST_MIC_ING = 8738;
@@ -45,6 +46,8 @@ public class PhoneMicTestActivity extends Activity implements OnClickListener{
 	TextView mTitle;
 	private Button mBtnRetest;
 	private VUMeter mVUMeter;
+	private Context mContext;
+	private Button success,fail;
 
 	public PhoneMicTestActivity() {
 		this.mHandler = new MyHandler();
@@ -59,18 +62,36 @@ public class PhoneMicTestActivity extends Activity implements OnClickListener{
 
 		getWindow().addFlags(1152);
 		setContentView(R.layout.phonemictest);
-
+		mContext = this;
 		mVUMeter = (VUMeter) findViewById(R.id.uvMeter);
 		this.mResult = (TextView) findViewById(R.id.phoneresultText);
 		this.mResult.setVisibility(View.VISIBLE);
 		this.mResult.setGravity(17);
-		ControlButtonUtil.initControlButtonView(this);
+		//ControlButtonUtil.initControlButtonView(this);
 		mBtnRetest = (Button)findViewById(R.id.btn_retest);
 		mBtnRetest.setOnClickListener(this);
 		mBtnRetest.setEnabled(false);
 		this.mRecorder = new Recorder();
 		this.mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 	    mVUMeter.setRecorder(mRecorder);
+
+		success = (Button)findViewById(R.id.btn_success);
+		success.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Settings.System.putInt(mContext.getContentResolver(), "Khadas_speaker_mic_test", 1);
+				finish();
+			}
+		});
+
+		fail = (Button)findViewById(R.id.btn_fail);
+		fail.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Settings.System.putInt(mContext.getContentResolver(), "Khadas_speaker_mic_test", 0);
+				finish();
+			}
+		});
 	}
 
 	@Override
@@ -131,9 +152,9 @@ public class PhoneMicTestActivity extends Activity implements OnClickListener{
 				break;
 			}
 
-			
+
 		    mAudioManager.setStreamVolume(3, mOldVolume, 0);
-		      
+
 			if (mSpeakerOn) {
 				mAudioManager.setSpeakerphoneOn(false);
 
@@ -170,7 +191,7 @@ public class PhoneMicTestActivity extends Activity implements OnClickListener{
 		@Override
 		public void handleMessage(Message msg) {
 
-			
+
 			switch (msg.what) {
 			default:
 			case MSG_TEST_MIC_START:
@@ -183,8 +204,6 @@ public class PhoneMicTestActivity extends Activity implements OnClickListener{
 				sendEmptyMessageDelayed(MSG_TEST_MIC_ING, 1000L);
 				break;
 			case MSG_TEST_MIC_ING:
-
-				
 
 				if (mTimes > 0) {
 
@@ -211,7 +230,7 @@ public class PhoneMicTestActivity extends Activity implements OnClickListener{
 				mBtnRetest.setEnabled(true);
 				break;
 			}
-			
+
 			mVUMeter.invalidate();
 		}
 
@@ -231,7 +250,7 @@ public class PhoneMicTestActivity extends Activity implements OnClickListener{
         mRecorder.stopPlayback();
         mBtnRetest.setEnabled(false);
         this.mHandler.sendEmptyMessage(MSG_TEST_MIC_START);
-        
+
     }
 	public boolean dispatchKeyEvent(KeyEvent event) {
 		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {

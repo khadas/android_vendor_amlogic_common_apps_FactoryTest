@@ -19,6 +19,7 @@
 	<uses-permission android:name="android.permission.READ_CONTACTS" />
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 	<uses-permission android:name="android.permission.WRITE_SETTINGS" />
+	<uses-permission android:name="android.permission.CAMERA" />
 
 	<uses-sdk android:minSdkVersion="23"/>
 
@@ -38,7 +39,11 @@
         </activity>
       <activity
             android:name=".IRKeyTestActivity"
-            android:label="@string/WriteMac" >
+            android:label="@string/IRKeyTest" >
+        </activity>
+      <activity
+            android:name=".MipiCameraTestActivity"
+            android:label="@string/Mipi_Camera" >
         </activity>
         <activity
             android:name=".PhoneMicTestActivity"

@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.content.Context;
+import android.provider.Settings;
 
 public class IRKeyTestActivity extends Activity {
 	
@@ -18,6 +20,8 @@ public class IRKeyTestActivity extends Activity {
 	  private HashMap<Integer, Button> mapView = new HashMap();
 	  private TextView text1;
 	  private TextView text2;
+	  private Button success,fail;
+	  private Context mContext;
 
 	  static
 	  {
@@ -90,9 +94,27 @@ public class IRKeyTestActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.keytest);
+		mContext = this;
 	    this.layout = ((RelativeLayout)findViewById(R.id.layout));
 	    this.text1 = ((TextView)findViewById(R.id.text1));
 	    this.text2 = ((TextView)findViewById(R.id.text2));
+		success = (Button)findViewById(R.id.btn_success);
+		success.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Settings.System.putInt(mContext.getContentResolver(), "Khadas_irkey_test", 1);
+				finish();
+			}
+		});
+
+		fail = (Button)findViewById(R.id.btn_fail);
+		fail.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Settings.System.putInt(mContext.getContentResolver(), "Khadas_irkey_test", 0);
+				finish();
+			}
+		});
 	}
 
 	  public boolean onKeyDown(int paramInt, KeyEvent paramKeyEvent)

@@ -6,6 +6,7 @@
     <string name="FactoryTest">Factory Test</string>
     <string name="LongTest">Long Test</string>
     <string name="WriteMac">烧录MAC地址</string>
+    <string name="Mipi_Camera">MIPI Camera</string>
     <string name="HandWriteMac">Hand Write Mac</string>
     <string name="FactoryReset">Factory Reset</string>
     <string name="btnScan">Scan Again</string>

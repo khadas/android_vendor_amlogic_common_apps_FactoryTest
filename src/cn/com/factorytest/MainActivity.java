@@ -37,6 +37,12 @@ import android.text.Editable;
 import android.text.format.Formatter;
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.provider.Settings;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.ViewGroup;
+import android.hardware.Camera;
+import android.view.MotionEvent;
 
 
 import java.io.FileReader;
@@ -59,7 +65,7 @@ import java.util.Enumeration;
 import java.net.*;
 import java.math.*;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements SurfaceHolder.Callback{
 
 	public static final String TAG = Tools.TAG;
 
@@ -83,6 +89,7 @@ public class MainActivity extends Activity {
 	public static boolean irkey_test = false;
 	public static boolean wol_enable  = false;
 	public static boolean mic_test  = false;
+	public static boolean mipi_camera_test  = false;
 	public static boolean board_key_test  = false;
 	public static boolean reset_mcu  = false;
 	public static boolean wirte_mac  = false;
@@ -131,7 +138,7 @@ public class MainActivity extends Activity {
 	Button m_Button_IRKey;
 	Button m_Button_reset_MCU;
 	Button m_Button_MIC;
- 
+	Button m_Button_Mipi_Camera;
 
     Handler mHandler = new FactoryHandler();
 
@@ -221,7 +228,9 @@ public class MainActivity extends Activity {
 	public static int ageing_time = 0;
 	public static int ageing_cpu_max = 0;
 
-    
+    private SurfaceView mSurfaceview = null;
+    private SurfaceHolder mSurfaceHolder = null;
+    private Camera mCamera =null;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -232,7 +241,9 @@ public class MainActivity extends Activity {
         maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         currentVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC); 
         mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, maxVolume, 0); 
-        
+
+		initSurfaceView();
+
         m_firmware_version = (TextView)findViewById(R.id.firmware_version_value);
         m_device_type = (TextView)findViewById(R.id.device_type_value);
         m_macvalue = (TextView)findViewById(R.id.mac_value);
@@ -272,6 +283,7 @@ public class MainActivity extends Activity {
 		m_Button_IRKey = (Button)findViewById(R.id.IRKeyTest);
 		m_Button_reset_MCU = (Button)findViewById(R.id.Button_RstMcu);
 		m_Button_MIC = (Button)findViewById(R.id.speaker_MIC);
+		m_Button_Mipi_Camera = (Button)findViewById(R.id.Mipi_Camera);
 
 		m_maccheck = (EditText)findViewById(R.id.EditTextMac);
         m_maccheck.setInputType(InputType.TYPE_NULL);
@@ -288,6 +300,11 @@ public class MainActivity extends Activity {
 
 		if(!reset_mcu) {
 			m_Button_reset_MCU.setVisibility(View.GONE);
+		}
+
+		m_Button_Mipi_Camera.setVisibility(View.GONE);
+		if(!mipi_camera_test) {
+			mSurfaceview.setVisibility(View.GONE);
 		}
 
 		if(!mcu_test) {
@@ -398,6 +415,63 @@ public class MainActivity extends Activity {
                 }
 			}
 		}.start();
+    }
+
+	private void initSurfaceView() {
+		Log.d(TAG, "CameraTest initSurfaceView");
+		mSurfaceview = (SurfaceView)findViewById(R.id.mSurfaceView_mipi);
+
+		mSurfaceHolder = mSurfaceview.getHolder();
+		mSurfaceHolder.addCallback(MainActivity.this);
+		//mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+		mSurfaceview.getHolder().setFixedSize(800, 480);
+		mSurfaceview.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+    }
+
+	@Override
+	public void surfaceCreated(SurfaceHolder holer) {
+		try {
+			Log.d(TAG, "CameraTest SurfaceHolder.Callback surface Created");
+
+			mCamera = Camera.open(0);
+			mCamera.setPreviewDisplay(mSurfaceHolder);
+
+			initCamera();
+		} catch (Exception ex) {
+			if(null != mCamera) {
+				mCamera.release();
+				mCamera = null;
+			}
+			Log.d(TAG, ex.getMessage());
+		}
+	}
+
+	@Override
+	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+		Log.d(TAG, "CameraTest SurfaceHolder.Callback Surface Changed");
+	}
+
+	@Override
+	public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+		Log.d(TAG, "CameraTest SurfaceHolder.Callback Surface Destroyed");
+		if(null != mCamera) {
+			mCamera.setPreviewCallback(null);
+			mCamera.stopPreview();
+			mCamera.release();
+			mCamera = null;
+		}
+	}
+
+	private void initCamera() {
+		if (mCamera != null) {
+			try {
+				Camera.Parameters parameters = mCamera.getParameters();
+				mCamera.setParameters(parameters);
+				mCamera.startPreview();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+        }
     }
  
     public void test_Thread() {
@@ -531,7 +605,28 @@ public class MainActivity extends Activity {
 			m_macvalue.setText("ERR");
 		}
         m_maccheck.requestFocus();
-       
+		int rec = 2;
+		rec =  Settings.System.getInt(mContext.getContentResolver(), "Khadas_mipi_camera_test",2);
+		if(rec == 1){
+			m_Button_Mipi_Camera.setTextColor(Color.GREEN);
+		}else if(rec == 0){
+			m_Button_Mipi_Camera.setTextColor(Color.RED);
+		}
+
+		rec =  Settings.System.getInt(mContext.getContentResolver(), "Khadas_speaker_mic_test",2);
+		if(rec == 1){
+			m_Button_MIC.setTextColor(Color.GREEN);
+		}else if(rec == 0){
+			m_Button_MIC.setTextColor(Color.RED);
+		}
+
+		rec =  Settings.System.getInt(mContext.getContentResolver(), "Khadas_irkey_test",2);
+		if(rec == 1){
+			m_Button_IRKey.setTextColor(Color.GREEN);
+		}else if(rec == 0){
+			m_Button_IRKey.setTextColor(Color.RED);
+		}
+
     }
 
     TextWatcher mTextWatcher = new TextWatcher()
@@ -605,6 +700,12 @@ public class MainActivity extends Activity {
 	public void speaker_MIC(View view){
 		Log.d(TAG, "speaker_MIC()");
 		Intent intent = new Intent(this, PhoneMicTestActivity.class);
+		startActivity(intent);
+    }
+
+	public void Mipi_Camera(View view){
+		Log.d(TAG, "Mipi_Camera()");
+		Intent intent = new Intent(this, MipiCameraTestActivity.class);
 		startActivity(intent);
     }
 
@@ -1641,7 +1742,7 @@ public class MainActivity extends Activity {
         mBottomLayout2.setVisibility(View.VISIBLE);
         mBottomLayout3.setVisibility(View.VISIBLE);
         mBottomLayout4.setVisibility(View.VISIBLE);
-        mBottomLayout5.setVisibility(View.VISIBLE);
+        //mBottomLayout5.setVisibility(View.VISIBLE);
 		mBottomLayout6.setVisibility(View.VISIBLE);
         return super.onKeyDown(keyCode, event);
     }
