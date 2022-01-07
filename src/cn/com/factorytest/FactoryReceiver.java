@@ -41,7 +41,7 @@ public class FactoryReceiver extends BroadcastReceiver{
 			Log.d(TAG, "Factory action="+action);
 
 			try {
-				Thread.sleep(3 * 1000);
+				Thread.sleep(8 * 1000);
 			} catch (Exception e){
 				e.printStackTrace();
 			}

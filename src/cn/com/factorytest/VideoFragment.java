@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.VideoView;
+import android.os.Build;
+import java.io.IOException;
 
 import java.util.Date;
 
@@ -100,16 +102,40 @@ public class VideoFragment extends Fragment implements MediaPlayer.OnCompletionL
                 case MSG_UPDATE_TIME:
 					if(1 == MainActivity.ageing_flag){
 						if(2 == ageing_test_step && 2 != led_status){
-							Tools.writeFile(Tools.White_Led,"heartbeat");//default-on off heartbeat
+							if(Build.MODEL.equals("kvim4")){
+								try {
+									Tools.execCommand(new String[]{"sh", "-c", "echo 0 0 > /sys/class/leds/state_led/breath"});
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+							}else{
+								Tools.writeFile(Tools.White_Led,"heartbeat");//default-on off heartbeat
+							}
 							led_status = 2;
 						}
 						else{
 							if(1 == led_status){
-								Tools.writeFile(Tools.White_Led,"off");//default-on off heartbeat
+								if(Build.MODEL.equals("kvim4")){
+									try {
+										Tools.execCommand(new String[]{"sh", "-c", "echo 0 0 > /sys/class/leds/state_led/state_brightness"});
+									} catch (IOException e) {
+										e.printStackTrace();
+									}
+								}else{
+									Tools.writeFile(Tools.White_Led,"off");//default-on off heartbeat
+								}
 								led_status = 0;
 							}
 							else if(0 == led_status){
-								Tools.writeFile(Tools.White_Led,"default-on");//default-on off heartbeat
+								if(Build.MODEL.equals("kvim4")){
+									try {
+										Tools.execCommand(new String[]{"sh", "-c", "echo 0 255 > /sys/class/leds/state_led/state_brightness"});
+									} catch (IOException e) {
+										e.printStackTrace();
+									}
+								}else{
+									Tools.writeFile(Tools.White_Led,"default-on");//default-on off heartbeat
+								}
 								led_status = 1;
 							}
 						}

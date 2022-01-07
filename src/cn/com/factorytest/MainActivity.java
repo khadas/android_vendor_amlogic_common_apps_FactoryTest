@@ -394,6 +394,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 
 				while (true) {
 					try {
+						unregisterBTReceiver();
 						test_Thread();
 						Thread.sleep(10 * 1000);
                     } catch (Exception localException1) {
@@ -568,7 +569,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
         
         m_ddr_size.setText((Tools.getmem_TOLAL()*100/1024/1024/100.0)+" GB");
         m_nand_size.setText(Tools.getRomSize(this));
-        m_firmware_version.setText(Build.VERSION.INCREMENTAL);
+		if(Build.MODEL.equals("kvim4")){
+			m_firmware_version.setText(Build.DISPLAY);
+		}else{
+			m_firmware_version.setText(Build.VERSION.INCREMENTAL);
+		}
         m_device_type.setText(Build.MODEL);
         
         updateEthandWifi();
@@ -587,23 +592,41 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
         mountfilter.addDataScheme("file");
         registerReceiver(mountReceiver, mountfilter);
         
-		String strMac = Tools.getMac();
-		if (strMac != null) {
-			int length = strMac.length();
-			if (length != 17) {
-				m_macvalue.setTextColor(Color.RED);
-				m_macvalue.setText("ERR");
+		if(Build.MODEL.equals("kvim4")){
+			String strMac = Tools.getEthMac();
+			if (strMac != null) {
+				int length = strMac.length();
+				if (length != 17) {
+					m_macvalue.setTextColor(Color.RED);
+					m_macvalue.setText("ERR");
+				} else {
+					m_macvalue.setTextColor(Color.RED);
+					m_macvalue.setText(strMac+" ");
+				}
 			} else {
 				m_macvalue.setTextColor(Color.RED);
-				m_macvalue.setText(strMac+" ");
-				if (Tools.isMacFromEfuse()) {
-					m_TextView_MacLabel.setTextColor(Color.GREEN);
-				}
+				m_macvalue.setText("ERR");
 			}
-		} else {
-			m_macvalue.setTextColor(Color.RED);
-			m_macvalue.setText("ERR");
+		}else{
+			String strMac = Tools.getMac();
+			if (strMac != null) {
+				int length = strMac.length();
+				if (length != 17) {
+					m_macvalue.setTextColor(Color.RED);
+					m_macvalue.setText("ERR");
+				} else {
+					m_macvalue.setTextColor(Color.RED);
+					m_macvalue.setText(strMac+" ");
+					if (Tools.isMacFromEfuse()) {
+						m_TextView_MacLabel.setTextColor(Color.GREEN);
+					}
+				}
+			} else {
+				m_macvalue.setTextColor(Color.RED);
+				m_macvalue.setText("ERR");
+			}
 		}
+
         m_maccheck.requestFocus();
 		int rec = 2;
 		rec =  Settings.System.getInt(mContext.getContentResolver(), "Khadas_mipi_camera_test",2);
@@ -626,6 +649,25 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 		}else if(rec == 0){
 			m_Button_IRKey.setTextColor(Color.RED);
 		}
+		//set red led breath
+		//Tools.writeFile("/sys/class/mcu/redled","2");
+		/*try {
+			Tools.execCommand(new String[]{"sh", "-c", "echo 2 > /sys/class/mcu/redled"});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}*/
+
+		//set fan level 3
+		Tools.writeFile("/sys/class/fan/enable","1");
+		Tools.writeFile("/sys/class/fan/mode","0");
+		Tools.writeFile("/sys/class/fan/level","3");
+        /*try {
+			Tools.execCommand(new String[]{"sh", "-c", "echo 1 > /sys/class/fan/enable"});
+			Tools.execCommand(new String[]{"sh", "-c", "echo 0 > /sys/class/fan/mode"});
+			Tools.execCommand(new String[]{"sh", "-c", "echo 3 > /sys/class/fan/level"});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}*/
 
     }
 
@@ -655,8 +697,17 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 		// TODO Auto-generated method stub
     	//退出产测apk恢复系统音量大小
     	if(mAudioManager != null)
-    	mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, 0); 
+			mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, 0);
+		unregisterBTReceiver();
 		super.onDestroy();
+	}
+
+	private void unregisterBTReceiver() {
+		Log.d(TAG, "[unregisterBTReceiver]BTReceiver");
+		if (mBTDeviceReceiver != null) {
+			unregisterReceiver (mBTDeviceReceiver);
+			mBTDeviceReceiver = null;
+		}
 	}
 
 	@Override
@@ -679,8 +730,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 
     public void rst_mcu(View view){
 		Log.d(TAG, "rst_mcu()");
-        Tools.writeFile(Tools.White_Led,"off");
-        Tools.writeFile(Tools.Red_Led,"off");
+        //Tools.writeFile(Tools.White_Led,"off");
+        //Tools.writeFile(Tools.Red_Led,"off");
         Tools.writeFile("/sys/class/mcu/rst", "0");
     }
 

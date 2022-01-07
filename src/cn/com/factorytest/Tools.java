@@ -27,6 +27,7 @@ import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.util.Log;
 import java.util.List;
+import java.math.BigInteger;
 
 import android.os.storage.VolumeInfo;
 import android.os.storage.StorageVolume;
@@ -40,12 +41,14 @@ public class Tools {
 	public static final String Gxl_platform_name  = "gxl";
 	public static final String Gxm_platform_name  = "gxm";
 	public static final String G12b_platform_name = "g12b";
+	public static final String T7_platform_name = "t7";
 	
     public static final String Key_List =(isGxbaby()?"/sys/class/unifykeys/list":"/sys/class/aml_keys/aml_keys/key_list");
     public static final String Key_Name = (isGxbaby()?"/sys/class/unifykeys/name":"/sys/class/aml_keys/aml_keys/key_name");
     public static final String Key_Read = (isGxbaby()?"/sys/class/unifykeys/read":"/sys/class/aml_keys/aml_keys/key_read");
     public static final String Key_Write = (isGxbaby()?"/sys/class/unifykeys/write":"/sys/class/aml_keys/aml_keys/key_write");
 	public static final String Key_OTP_Mac = "/sys/class/efuse/mac";
+	public static final String Key_OTP_Usid = "/sys/class/efuse/usid";
     
     public static final String Key_Attach = "/sys/class/unifykeys/attach";
     public static final String Key_Attach_Value = "1";
@@ -147,6 +150,53 @@ public class Tools {
 		}
     }
 
+    public static String getEthMac(){
+		String temp = readFile(Tools.Key_OTP_Mac);
+		//Log.e("wjh", "temp="+temp);
+		String srtMac = temp.split("\\s+")[1] + ":" +
+						temp.split("\\s+")[2] + ":" +
+						temp.split("\\s+")[3] + ":" +
+						temp.split("\\s+")[4] + ":" +
+						temp.split("\\s+")[5] + ":" +
+						temp.split("\\s+")[6];
+		Log.e(TAG, "srtMac="+srtMac);
+		return srtMac;
+	}
+
+    public static String getUsid(){
+		String temp = readFile(Tools.Key_OTP_Usid);
+		Log.e("wjh", "temp="+temp);
+		if(temp.contains("0x00: 00 00 00 00 00 00 00 00 00 00")){
+			return "0000000000";
+		}
+		String srtUsid = asciiToString(decodeHEX(temp.split("\\s+")[1])) +
+						 asciiToString(decodeHEX(temp.split("\\s+")[2])) +
+						 asciiToString(decodeHEX(temp.split("\\s+")[3])) +
+						 asciiToString(decodeHEX(temp.split("\\s+")[4])) +
+						 asciiToString(decodeHEX(temp.split("\\s+")[5])) +
+						 asciiToString(decodeHEX(temp.split("\\s+")[6])) +
+						 asciiToString(decodeHEX(temp.split("\\s+")[7])) +
+						 asciiToString(decodeHEX(temp.split("\\s+")[8])) +
+						 asciiToString(decodeHEX(temp.split("\\s+")[9])) +
+						 asciiToString(decodeHEX(temp.split("\\s+")[10]));
+		Log.e(TAG, "srtUsid="+srtUsid);
+		return srtUsid;
+	}
+
+	public static String decodeHEX(String hexs){
+		BigInteger bigint=new BigInteger(hexs, 16);
+		String numb = "" +bigint.intValue();
+		return numb;
+	}
+
+	public static String asciiToString(String value){
+        StringBuffer sbu = new StringBuffer();
+        String[] chars = value.split(",");
+        for (int i = 0; i < chars.length; i++) {
+            sbu.append((char) Integer.parseInt(chars[i]));
+        }
+        return sbu.toString();
+    }
 
     public static boolean isMacFromEfuse()
     {
@@ -343,7 +393,8 @@ public class Tools {
     	return Gxbaby_platform_name.equals(SystemProperties.get("ro.board.platform"))
 					|| Gxl_platform_name.equals(SystemProperties.get("ro.board.platform"))
 					|| Gxm_platform_name.equals(SystemProperties.get("ro.board.platform"))
-					|| G12b_platform_name.equals(SystemProperties.get("ro.board.platform"));
+					|| G12b_platform_name.equals(SystemProperties.get("ro.board.platform"))
+					|| T7_platform_name.equals(SystemProperties.get("ro.board.platform"));
     }
 	
 	/**
