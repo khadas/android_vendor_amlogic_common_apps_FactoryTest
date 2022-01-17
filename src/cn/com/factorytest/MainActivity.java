@@ -658,16 +658,13 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 		}*/
 
 		//set fan level 3
-		Tools.writeFile("/sys/class/fan/enable","1");
-		Tools.writeFile("/sys/class/fan/mode","0");
-		Tools.writeFile("/sys/class/fan/level","3");
-        /*try {
+        try {
 			Tools.execCommand(new String[]{"sh", "-c", "echo 1 > /sys/class/fan/enable"});
 			Tools.execCommand(new String[]{"sh", "-c", "echo 0 > /sys/class/fan/mode"});
 			Tools.execCommand(new String[]{"sh", "-c", "echo 3 > /sys/class/fan/level"});
 		} catch (IOException e) {
 			e.printStackTrace();
-		}*/
+		}
 
     }
 
