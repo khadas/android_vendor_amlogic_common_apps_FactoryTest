@@ -569,7 +569,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
         
         m_ddr_size.setText((Tools.getmem_TOLAL()*100/1024/1024/100.0)+" GB");
         m_nand_size.setText(Tools.getRomSize(this));
-		if(Build.MODEL.equals("kvim4")){
+		if(Build.MODEL.equals("VIM4")){
 			m_firmware_version.setText(Build.DISPLAY);
 		}else{
 			m_firmware_version.setText(Build.VERSION.INCREMENTAL);
@@ -592,7 +592,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
         mountfilter.addDataScheme("file");
         registerReceiver(mountReceiver, mountfilter);
         
-		if(Build.MODEL.equals("kvim4")){
+		if(Build.MODEL.equals("VIM4")){
 			String strMac = Tools.getEthMac();
 			if (strMac != null) {
 				int length = strMac.length();

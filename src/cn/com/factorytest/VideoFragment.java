@@ -102,7 +102,7 @@ public class VideoFragment extends Fragment implements MediaPlayer.OnCompletionL
                 case MSG_UPDATE_TIME:
 					if(1 == MainActivity.ageing_flag){
 						if(2 == ageing_test_step && 2 != led_status){
-							if(Build.MODEL.equals("kvim4")){
+							if(Build.MODEL.equals("VIM4")){
 								try {
 									Tools.execCommand(new String[]{"sh", "-c", "echo 0 0 > /sys/class/leds/state_led/breath"});
 								} catch (IOException e) {
@@ -115,7 +115,7 @@ public class VideoFragment extends Fragment implements MediaPlayer.OnCompletionL
 						}
 						else{
 							if(1 == led_status){
-								if(Build.MODEL.equals("kvim4")){
+								if(Build.MODEL.equals("VIM4")){
 									try {
 										Tools.execCommand(new String[]{"sh", "-c", "echo 0 0 > /sys/class/leds/state_led/state_brightness"});
 									} catch (IOException e) {
@@ -127,7 +127,7 @@ public class VideoFragment extends Fragment implements MediaPlayer.OnCompletionL
 								led_status = 0;
 							}
 							else if(0 == led_status){
-								if(Build.MODEL.equals("kvim4")){
+								if(Build.MODEL.equals("VIM4")){
 									try {
 										Tools.execCommand(new String[]{"sh", "-c", "echo 0 255 > /sys/class/leds/state_led/state_brightness"});
 									} catch (IOException e) {

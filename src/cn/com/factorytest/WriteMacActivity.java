@@ -80,7 +80,7 @@ public class WriteMacActivity extends Activity {
     	}
     	else if(getResources().getInteger(R.integer.config_usid_length) == nTextlen)
     	{
-			if(Build.MODEL.equals("kvim4")){
+			if(Build.MODEL.equals("VIM4")){
 				Vim4WriteUsid();
 			}else{
 				OnWriteUsid();
@@ -243,7 +243,7 @@ public class WriteMacActivity extends Activity {
 					}
 					Log.d(TAG,"MAC ="+ mac + " format_err= "+format_err);
 					if (!format_err) {
-						if(Build.MODEL.equals("kvim4")){
+						if(Build.MODEL.equals("VIM4")){
 							Tools.writeFile(Tools.Key_OTP_Mac, strMac);
 						}else{
 							String cmd = String.format("setbootenv ubootenv.var.factory_mac %s", strMac);
@@ -323,7 +323,7 @@ public class WriteMacActivity extends Activity {
 	
 	public void ShowMac()
 	{	
-		if(Build.MODEL.equals("kvim4")){
+		if(Build.MODEL.equals("VIM4")){
 			Tools.writeFile(Tools.Key_Name, Tools.Key_Mac);
 			String strMac =  Tools.readFile(Tools.Key_Read);
 			Log.e(TAG, "strMac : " + strMac  + ";  length    : " + strMac.length() );
@@ -334,7 +334,7 @@ public class WriteMacActivity extends Activity {
 
 	public void ShowMac_OTP()
 	{
-		if(Build.MODEL.equals("kvim4")){
+		if(Build.MODEL.equals("VIM4")){
 			String strTmpMac = "";
 			String strMac = Tools.getEthMac();
 			Log.e(TAG, "strMac : " + strMac  + ";  length    : " + strMac.length() );
@@ -375,7 +375,7 @@ public class WriteMacActivity extends Activity {
 	
 	public void ShowUsid()
 	{
-		if(Build.MODEL.equals("kvim4")){
+		if(Build.MODEL.equals("VIM4")){
 			if(Tools.getUsid().equals("0000000000")){
 				m_UsidAddr.setTextColor(Color.RED);
 			}else{
